@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8564226669240735805
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 836907153051751067, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_Color.a
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346912332701166847, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346912332701166847, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346912332701166847, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346912332701166847, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346912332701166847, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362965292272778993, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6358289454627605074, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_Name
+      value: BoardElement_ShopItem_Normal_50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399592835695004243, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: _showNormalSprite
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308766508418580596, guid: c5c27d116f48af0478c0145971978580, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c5c27d116f48af0478c0145971978580, type: 3}
