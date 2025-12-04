@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e89392efc3d8b4d820a5da0e3fa8a3, type: 3}
   m_Name: 1x2_Bar
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Pineapple (M)
+  <Name>k__BackingField: 1x2_Bar
   <NormalSprite1>k__BackingField: {fileID: 21300000, guid: ac41e5bfd5c98be4aa95b8e94f7f3171, type: 3}
   <NormalSprite2>k__BackingField: {fileID: 21300000, guid: f6322f04ce8fabc47a5fb509fc16d1bc, type: 3}
   <SimplifiedSprite>k__BackingField: {fileID: 21300000, guid: 3717f26c478cdd74682ed1628d662675, type: 3}
