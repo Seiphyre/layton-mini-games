@@ -6,35 +6,39 @@ namespace BoardSystem
 {
     public class BoardView : UIElement
     {
-        [Header("Board Data")]
+        [Header("Data")]
         [SerializeField] private BoardData boardData;
 
-        [Header("View Settings")]
+        [Header("Board Settings")]
         [SerializeField] private float cellSize = 40f;
-        [SerializeField] private float wallThickness = 8f;
-        [SerializeField] private float gridLineThickness = 1f;
         [SerializeField] private Color backgroundColor = new Color(0.5f, 0.5f, 0.5f);
-        [SerializeField] private Color tileColor = new Color(0.25f, 0.35f, 0.25f);
-        [SerializeField] private Color gridColor = new Color(0, 0, 0, 0.75f);
-        [SerializeField] private Color wallColor = new Color(0.55f, 0.30f, 0.10f);
-        [SerializeField] private Color jointColor = new Color(0.55f, 0.30f, 0.10f);
 
-        [Header("Prefabs")]
+        [Header("Tiles Settings")]
         [SerializeField] private TileView tilePrefab;
-        [SerializeField] private GridView gridPrefab;
+
+        [SerializeField] private int tilesLayerOrder = 0;
+        [SerializeField] private Color tileColor = new Color(0.25f, 0.35f, 0.25f);
+
+        [Header("Walls Settings")]
         [SerializeField] private WallView wallHorizontalPrefab;
         [SerializeField] private WallView wallVerticalPrefab;
         [SerializeField] private JointView jointPrefab;
 
+        [SerializeField] private int wallsHLayerOrder = 2;
+        [SerializeField] private int wallsVLayerOrder = 3;
+        [SerializeField] private int jointsLayerOrder = 4;
 
-        [Header("Layer Order")]
-        [SerializeField] private int tilesOrder = 0;
-        [SerializeField] private int gridOrder = 1;
-        [SerializeField] private int wallsHOrder = 2;
-        [SerializeField] private int wallsVOrder = 3;
-        [SerializeField] private int jointsOrder = 4;
+        [SerializeField] private float wallThickness = 8f;
+        [SerializeField] private Color wallColor = new Color(0.55f, 0.30f, 0.10f);
+        [SerializeField] private Color jointColor = new Color(0.55f, 0.30f, 0.10f);
 
-        // --- Layers (Task 1) ---
+        [Header("Grid Settings")]
+        [SerializeField] private GridView gridPrefab;
+        [SerializeField] private int gridLayerOrder = 1;
+        [SerializeField] private float gridThickness = 1f;
+        [SerializeField] private Color gridColor = new Color(0, 0, 0, 0.75f);
+
+        // --- Layers ---
         private RectTransform layerBackground;
         private RectTransform layerTiles;
         private RectTransform layerGrid;
@@ -108,7 +112,7 @@ namespace BoardSystem
             SetLayoutSize(new Vector2(width + BorderThickness, height + BorderThickness));
         }
 
-        private float BorderThickness => Mathf.Max(gridLineThickness, wallThickness);
+        private float BorderThickness => Mathf.Max(gridThickness, wallThickness);
 
 
         // ============================================================
@@ -172,11 +176,11 @@ namespace BoardSystem
             List<(int order, RectTransform layer)> ordered = new()
             {
                 (-1, layerBackground), 
-                (tilesOrder, layerTiles),
-                (gridOrder, layerGrid),
-                (wallsHOrder, layerWallsH),
-                (wallsVOrder, layerWallsV),
-                (jointsOrder, layerJoints),
+                (tilesLayerOrder, layerTiles),
+                (gridLayerOrder, layerGrid),
+                (wallsHLayerOrder, layerWallsH),
+                (wallsVLayerOrder, layerWallsV),
+                (jointsLayerOrder, layerJoints),
             };
 
             // Sort by order value
@@ -387,11 +391,11 @@ namespace BoardSystem
                 height * 0.5f
             );
 
-            gridView.SetSize(new Vector2(width + gridLineThickness, height + gridLineThickness));
+            gridView.SetSize(new Vector2(width + gridThickness, height + gridThickness));
             gridView.SetLocalPositionPivotAware(pos);
 
             // Generate procedural grid texture
-            Texture2D tex = GenerateGridTexture(w, h, cellSize, gridLineThickness);
+            Texture2D tex = GenerateGridTexture(w, h, cellSize, gridThickness);
             gridView.SetTexture(tex);
             gridView.SetColor(gridColor);
         }

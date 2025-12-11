@@ -15,11 +15,11 @@ using UnityEngine;
 /// </summary>
 public class BoardController : MonoBehaviour
 {
-    [Header("Board Data")]
+    [Header("Data")]
     [SerializeField] private BoardData boardData;
 
     [Header("View")]
-    [SerializeField] private BoardView_OLD boardView;
+    [SerializeField] private BoardView boardView;
 
     /// <summary>
     /// The logical board used at runtime.
@@ -44,7 +44,10 @@ public class BoardController : MonoBehaviour
 
         // Initialize visual representation
         if (boardView != null)
-            boardView.Create(Board);
+        {
+            boardView.BoardData = boardData;
+            boardView.Rebuild();
+        }
     }
 
 
@@ -58,6 +61,6 @@ public class BoardController : MonoBehaviour
     public void RefreshView()
     {
         if (boardView != null)
-            boardView.Refresh();
+            boardView.Rebuild();
     }
 }
