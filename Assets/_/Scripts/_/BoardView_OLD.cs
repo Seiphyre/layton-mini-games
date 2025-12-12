@@ -1,10 +1,11 @@
-using BoardSystem;
+using VForge.Boards;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using VForge.Boards.Definitions;
 
 /// <summary>
 /// 
