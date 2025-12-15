@@ -1,0 +1,18 @@
+{
+    "name": "VForge.Gameplay",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0a071830873f19342844f78d027c5bc2",
+        "GUID:2190eb98608bbb646b10747b17f6ecf6",
+        "GUID:7b242b76a00668345862c8513e6382c0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
