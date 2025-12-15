@@ -24,11 +24,10 @@ public class TestBoardPiecesBootstrap : MonoBehaviour
         pieceBoard = new PieceBoard(board);
 
         var pieceBoardView = Instantiate(pieceBoardViewPrefab);
-        pieceBoardView.name = "Pieces Board";
+        pieceBoardView.name = "Pieces";
+        pieceBoardView.Initialize(pieceBoard, boardView);
 
         boardView.AttachToLayer(BoardViewLayer.Pieces, pieceBoardView.RectTransform);
-
-        pieceBoardView.Initialize(pieceBoard, boardView);
 
         // 3. Load starting pieces
         PieceBoardInitializer.LoadStartingPieces(pieceBoard, pieceDataSet);
