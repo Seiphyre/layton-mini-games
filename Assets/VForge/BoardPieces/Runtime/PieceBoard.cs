@@ -58,7 +58,7 @@ namespace VForge.BoardPieces.Runtime
             if (piece.IsLocked)
                 return PieceOperationResult.Fail("Piece is locked.");
 
-            var res = validator.Validate(piece.Definition, origin);
+            var res = validator.Validate(piece.Definition, origin, piece);
             if (!res.IsValid)
                 return PieceOperationResult.Fail(res.Reason);
 

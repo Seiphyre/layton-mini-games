@@ -33,16 +33,46 @@ public class TestBoardPiecesBootstrap : MonoBehaviour
         PieceBoardInitializer.LoadStartingPieces(pieceBoard, pieceDataSet);
     }
 
+    Piece piece;
+    Piece Piece
+    {
+        get
+        {
+            if (piece == null)
+            {
+                var inventoryItem = pieceDataSet.Pieces.First();
+                piece = pieceBoard.GetPieceAt(inventoryItem.StartingPosition.x, inventoryItem.StartingPosition.y);
+            }
+
+            return piece;
+        }
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            var inventoryItem = pieceDataSet.Pieces.First();
-            var piece = pieceBoard.GetPieceAt(inventoryItem.StartingPosition.x, inventoryItem.StartingPosition.y);
+        Vector2Int dir = Vector2Int.zero;
 
-            pieceBoard.TryMove(piece, piece.CellPosition + Vector2Int.up);
-            // move first piece by 1 cell right
-            // (just for testing)
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            dir = Vector2Int.down;
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            dir = Vector2Int.up;
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            dir = Vector2Int.left;
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            dir = Vector2Int.right;
+
+        if (dir != Vector2Int.zero)
+        {
+            Debug.Log("Move");
+            var res = pieceBoard.TryMove(Piece, Piece.CellPosition + dir);
+
+            if (!res.Success)
+            {
+                Debug.Log(res.Reason);
+            }
         }
     }
 }

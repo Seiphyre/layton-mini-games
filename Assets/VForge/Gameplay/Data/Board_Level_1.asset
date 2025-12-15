@@ -58,12 +58,6 @@ MonoBehaviour:
     Y: 1
     Axis: 0
   - X: 2
-    Y: 2
-    Axis: 0
-  - X: 2
-    Y: 4
-    Axis: 0
-  - X: 2
     Y: 5
     Axis: 0
   - X: 3
@@ -99,14 +93,14 @@ MonoBehaviour:
   - X: 1
     Y: 4
     Axis: 1
-  - X: 2
-    Y: 2
-    Axis: 1
-  - X: 2
-    Y: 3
-    Axis: 1
   - X: 3
     Y: 1
+    Axis: 1
+  - X: 3
+    Y: 2
+    Axis: 1
+  - X: 3
+    Y: 3
     Axis: 1
   - X: 3
     Y: 4

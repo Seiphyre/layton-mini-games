@@ -18,7 +18,7 @@ namespace VForge.BoardPieces.Runtime
             this.pieces = pieces;
         }
 
-        public PiecePlacementResult Validate(PieceDefinition def, Vector2Int origin)
+        public PiecePlacementResult Validate(PieceDefinition def, Vector2Int origin, Piece ignoredPiece = null)
         {
             if (def == null || def.Shape == null)
                 return PiecePlacementResult.Invalid("Invalid piece definition.");
@@ -46,6 +46,9 @@ namespace VForge.BoardPieces.Runtime
             // 3. Overlap check against existing pieces
             foreach (var piece in pieces)
             {
+                if (piece == ignoredPiece)
+                    continue;
+
                 foreach (var occupied in piece.GetOccupiedCells())
                 {
                     if (candidateCells.Contains(occupied))
