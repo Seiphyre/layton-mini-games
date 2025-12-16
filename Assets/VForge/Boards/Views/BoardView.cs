@@ -44,14 +44,7 @@ namespace VForge.Boards.Views
 
         // --- Layers ---
         private readonly Dictionary<BoardViewLayer, RectTransform> layers = new();
-
-        private RectTransform layerBackground;
-        private RectTransform layerTiles;
-        private RectTransform layerGrid;
-        private RectTransform layerPieces;
-        private RectTransform layerWallsH;
-        private RectTransform layerWallsV;
-        private RectTransform layerJoints;
+        private RectTransform boardSpace;
 
         // --- Instantiated views ---
         private readonly List<TileView> tileViews = new();
@@ -77,7 +70,8 @@ namespace VForge.Boards.Views
 
 
 
-        public RectTransform PiecesLayer => layerPieces;
+        public RectTransform GetLayer(BoardViewLayer layer)
+            => layers.TryGetValue(layer, out var rt) ? rt : null;
 
         public BoardData BoardData
         {
@@ -116,31 +110,16 @@ namespace VForge.Boards.Views
                 return;
 
             ClearHierarchy();
-
             CreateLayers();
             ApplyLayerOrder();
             ResizeBoard();
-            //ApplyOriginShift();
-            ApplyLayerOrder();
 
             CreateBackground();
             CreateTiles();
             CreateGrid();
             CreateWalls();
             CreateJoints();
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(RectTransform);
         }
-
-        // ============================================================
-        // Grid Management
-        // ============================================================
-
-        private void ResizeBoard()
-        {
-            SetLayoutSize(OuterBoardSizePx);
-        }
-
 
         // ============================================================
         // Hierarchy Management
@@ -148,75 +127,59 @@ namespace VForge.Boards.Views
 
         private void ClearHierarchy()
         {
-            tileViews.Clear();
-            wallHViews.Clear();
-            wallVViews.Clear();
-            jointViews.Clear();
-            gridView = null;
-
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                Transform child = transform.GetChild(i);
+                var child = transform.GetChild(i).gameObject;
                 if (Application.isPlaying)
-                    Destroy(child.gameObject);
+                    Destroy(child);
                 else
-                    DestroyImmediate(child.gameObject);
+                    DestroyImmediate(child);
             }
+
+            layers.Clear();
         }
 
         private void CreateLayers()
         {
-            layerBackground = CreateLayer("Background");
-            layerTiles = CreateLayer("Tiles");
-            layerGrid = CreateLayer("Grid");
-            layerPieces = CreateLayer("Pieces");
-            layerWallsH = CreateLayer("Walls-H");
-            layerWallsV = CreateLayer("Walls-V");
-            layerJoints = CreateLayer("Joints");
+            EnsureBoardSpace();
 
-            layers.Clear();
-            layers[BoardViewLayer.Background] = layerBackground;
-            layers[BoardViewLayer.Tiles] = layerTiles;
-            layers[BoardViewLayer.Grid] = layerGrid;
-            layers[BoardViewLayer.Pieces] = layerPieces;
-            layers[BoardViewLayer.WallsHorizontal] = layerWallsH;
-            layers[BoardViewLayer.WallsVertical] = layerWallsV;
-            layers[BoardViewLayer.Joints] = layerJoints;
+            CreateLayer(BoardViewLayer.Background);
+            CreateLayer(BoardViewLayer.Tiles);
+            CreateLayer(BoardViewLayer.Grid);
+            CreateLayer(BoardViewLayer.Pieces);
+            CreateLayer(BoardViewLayer.WallsHorizontal);
+            CreateLayer(BoardViewLayer.WallsVertical);
+            CreateLayer(BoardViewLayer.Joints);
         }
 
-        private RectTransform CreateLayer(string name)
+        private RectTransform CreateLayer(BoardViewLayer layer)
         {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(transform, false);
-
-            Vector2 origin = OuterBoardSizePx * -RectTransform.pivot; // Position of "outer" origin
-            origin += Vector2.one * FrameThickness * 0.5f; // position of origin
+            var go = new GameObject(layer.ToString(), typeof(RectTransform));
+            go.transform.SetParent(boardSpace, false);
 
             RectTransform rt = go.GetComponent<RectTransform>();
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
             rt.pivot = Vector2.zero;
-            rt.localPosition = origin;
+            rt.anchoredPosition = Vector2.zero;
             rt.sizeDelta = BoardSizePx;
 
+            layers[layer] = rt;
             return rt;
         }
 
         private void ApplyLayerOrder()
         {
-            if (layerTiles == null || layerWallsH == null || layerWallsV == null)
-                return;
-
             // Build an ordered list
-            List<(int order, RectTransform layer)> ordered = new()
+            List<(int order, BoardViewLayer layer)> ordered = new()
             {
-                (-1, layerBackground), 
-                (tilesLayerOrder, layerTiles),
-                (gridLayerOrder, layerGrid),
-                (pieceLayerOrder, layerPieces),
-                (wallsHLayerOrder, layerWallsH),
-                (wallsVLayerOrder, layerWallsV),
-                (jointsLayerOrder, layerJoints),
+                (-1, BoardViewLayer.Background),
+                (tilesLayerOrder, BoardViewLayer.Tiles),
+                (gridLayerOrder, BoardViewLayer.Grid),
+                (pieceLayerOrder, BoardViewLayer.Pieces),
+                (wallsHLayerOrder, BoardViewLayer.WallsHorizontal),
+                (wallsVLayerOrder, BoardViewLayer.WallsVertical),
+                (jointsLayerOrder, BoardViewLayer.Joints),
             };
 
             // Sort by order value
@@ -224,7 +187,7 @@ namespace VForge.Boards.Views
 
             // Apply sibling indices in sorted order
             for (int i = 0; i < ordered.Count; i++)
-                ordered[i].layer.SetSiblingIndex(i);
+                layers[ordered[i].layer].SetSiblingIndex(i);
         }
 
         public bool AttachToLayer(BoardViewLayer layer, RectTransform t)
@@ -253,12 +216,37 @@ namespace VForge.Boards.Views
         }
 
         // ============================================================
+        // Grid Management
+        // ============================================================
+
+        private void EnsureBoardSpace()
+        {
+            if (boardSpace != null)
+                return;
+
+            var go = new GameObject("BoardSpace", typeof(RectTransform));
+            boardSpace = go.GetComponent<RectTransform>();
+            boardSpace.SetParent(transform, false);
+
+            boardSpace.anchorMin = Vector2.zero;
+            boardSpace.anchorMax = Vector2.zero;
+            boardSpace.pivot = Vector2.zero;
+            boardSpace.anchoredPosition = Vector2.one * (FrameThickness * 0.5f);
+            boardSpace.sizeDelta = BoardSizePx;
+        }
+
+        private void ResizeBoard()
+        {
+            SetLayoutSize(OuterBoardSizePx);
+        }
+
+        // ============================================================
         // Background Instantiation
         // ============================================================
 
         private void CreateBackground()
         {
-            var backgroundImage = layerBackground.gameObject.AddComponent<Image>();
+            var backgroundImage = layers[BoardViewLayer.Background].gameObject.AddComponent<Image>();
             backgroundImage.color = backgroundColor;
 
             //layerBackground.anchorMin = Vector2.zero;
@@ -277,7 +265,7 @@ namespace VForge.Boards.Views
         {
             foreach (var td in boardData.Tiles)
             {
-                var tv = Instantiate(tilePrefab, layerTiles);
+                var tv = Instantiate(tilePrefab, layers[BoardViewLayer.Tiles]);
                 tv.name = $"Tile ({td.X},{td.Y})";
 
                 Vector2 pos = new Vector2(
@@ -312,7 +300,7 @@ namespace VForge.Boards.Views
 
         private void CreateHorizontalWall(WallData w)
         {
-            var hv = Instantiate(wallHorizontalPrefab, layerWallsH);
+            var hv = Instantiate(wallHorizontalPrefab, layers[BoardViewLayer.WallsHorizontal]);
             hv.name = $"Wall H ({w.X},{w.Y})";
 
             Vector2 pos = new Vector2(
@@ -329,7 +317,7 @@ namespace VForge.Boards.Views
 
         private void CreateVerticalWall(WallData w)
         {
-            var vv = Instantiate(wallVerticalPrefab, layerWallsV);
+            var vv = Instantiate(wallVerticalPrefab, layers[BoardViewLayer.WallsVertical]);
             vv.name = $"Wall V ({w.X},{w.Y})";
 
             Vector2 pos = new Vector2(
@@ -364,7 +352,7 @@ namespace VForge.Boards.Views
                     if (!IsJointActive(jx, jy))
                         continue;
 
-                    var jv = Instantiate(jointPrefab, layerJoints);
+                    var jv = Instantiate(jointPrefab, layers[BoardViewLayer.Joints]);
                     jv.name = $"Joint ({jx},{jy})";
 
                     Vector2 pos = new Vector2(jx * cellSize, jy * cellSize);
@@ -426,7 +414,7 @@ namespace VForge.Boards.Views
             if (gridPrefab == null)
                 return;
 
-            gridView = Instantiate(gridPrefab, layerGrid);
+            gridView = Instantiate(gridPrefab, layers[BoardViewLayer.Grid]);
             gridView.name = "Grid";
 
             gridView.RectTransform.anchorMax = Vector2.zero;
@@ -472,21 +460,5 @@ namespace VForge.Boards.Views
             tex.Apply();
             return tex;
         }
-
-        // ============================================================
-        // Editor
-        // ============================================================
-
-#if UNITY_EDITOR
-        [SerializeField, HideInInspector] private bool dirty;
-        public bool IsDirty => dirty;
-        public void ClearDirty() => dirty = false;
-
-        private void OnValidate()
-        {
-            if (!Application.isPlaying)
-                dirty = true;
-        }
-#endif
     }
 }
