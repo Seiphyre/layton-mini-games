@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3095439035862831355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1194505212226137820}
+  - component: {fileID: 7695016326283155902}
+  - component: {fileID: 2418392309163635102}
+  - component: {fileID: 5244989313843358963}
+  m_Layer: 5
+  m_Name: Board
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1194505212226137820
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095439035862831355}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 496, y: 496}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7695016326283155902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095439035862831355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 392
+  m_MinHeight: 392
+  m_PreferredWidth: 392
+  m_PreferredHeight: 392
+  m_FlexibleWidth: 0
+  m_FlexibleHeight: 0
+  m_LayoutPriority: 1
+--- !u!114 &2418392309163635102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095439035862831355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656965e2af0206c4d8d806144439c224, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardData: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}
+  boardView: {fileID: 5244989313843358963}
+--- !u!114 &5244989313843358963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095439035862831355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca369e46b87ea243aadc0f8c795cab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardData: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}
+  cellSize: 64
+  backgroundColor: {r: 0.23529413, g: 0.23529413, b: 0.23529413, a: 0}
+  tilePrefab: {fileID: 7053597780093990191, guid: 453088c326a11504082d0ed1968bdce5, type: 3}
+  tilesLayerOrder: 0
+  tileColor: {r: 0.6901961, g: 0.6901961, b: 0.6901961, a: 1}
+  wallHorizontalPrefab: {fileID: 132239413712725733, guid: 109ecf892e68f2342be84a489bc066e2, type: 3}
+  wallVerticalPrefab: {fileID: 132239413712725733, guid: 109ecf892e68f2342be84a489bc066e2, type: 3}
+  jointPrefab: {fileID: 5316619050014120074, guid: 39e7e68e090073945b381731f2499ec2, type: 3}
+  wallsHLayerOrder: 2
+  wallsVLayerOrder: 3
+  jointsLayerOrder: 4
+  wallThickness: 8
+  wallColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  jointColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
+  gridPrefab: {fileID: 4331778469094510834, guid: 6ce171237b6e79a498d11acd1a77567e, type: 3}
+  gridLayerOrder: 1
+  gridThickness: 2
+  gridColor: {r: 0.16, g: 0.16, b: 0.16, a: 0.9019608}
+  pieceLayerOrder: 2

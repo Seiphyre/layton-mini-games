@@ -5,11 +5,19 @@ using VForge.BoardPieces.Runtime;
 using VForge.Gameplay;
 using VForge.BoardPieces.Views;
 using System.Linq;
+using VForge.BoardPieces.Definitions;
+using VForge.Inventories;
 
 public class TestBoardPiecesBootstrap : MonoBehaviour
 {
+    [Header("Scene References")]
     [SerializeField] private BoardView boardView;
+    [SerializeField] private PieceInventoryPresenter pieceInventoryPresenter;
+
+    [Header("Data References")]
     [SerializeField] private PieceDataSet pieceDataSet;
+
+    [Header("Prefab References")]
     [SerializeField] private PieceBoardView pieceBoardViewPrefab;
 
     private PieceBoard pieceBoard;
@@ -31,6 +39,16 @@ public class TestBoardPiecesBootstrap : MonoBehaviour
 
         // 3. Load starting pieces
         PieceBoardInitializer.LoadStartingPieces(pieceBoard, pieceDataSet);
+
+        // 4.
+        var inventory = new Inventory<PieceDefinition>();
+
+        foreach (var piece in pieceDataSet.Pieces)
+        {
+            inventory.Add(new InventoryItem<PieceDefinition>(null, piece.Definition));
+        }
+
+        pieceInventoryPresenter.SetList(inventory.Items);
     }
 
     Piece piece;

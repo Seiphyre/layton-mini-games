@@ -32,13 +32,13 @@ public class Pagination : MonoBehaviour
 
             ClampCurrentPage();
 
-            onPageChanged.Invoke();
+            onPageChanged?.Invoke();
         }
     }
 
 
 
-    public void SetTotalItems(int value)
+    public void SetTotalItems(int value, bool notify = true)
     {
         value = Mathf.Max(0, value);
 
@@ -48,7 +48,8 @@ public class Pagination : MonoBehaviour
 
             ClampCurrentPage();
 
-            onPageChanged.Invoke();
+            if (notify)
+                onPageChanged?.Invoke();
         }
     }
 
@@ -65,7 +66,7 @@ public class Pagination : MonoBehaviour
         {
             CurrentPage = page;
 
-            onPageChanged.Invoke();
+            onPageChanged?.Invoke();
         }
     }
 

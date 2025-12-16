@@ -162,7 +162,7 @@ public abstract class ListPresenter<T> : UIElement
 
         if (pagination != null)
         {
-            pagination.SetTotalItems(_list.Count);
+            pagination.SetTotalItems(_list.Count, notify: false);
             (startIndex, endIndex) = pagination.GetVisibleRange(false);
         }
 
