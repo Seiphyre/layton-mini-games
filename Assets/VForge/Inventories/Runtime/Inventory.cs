@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace VForge.Inventories
 {
@@ -13,12 +14,21 @@ namespace VForge.Inventories
         private readonly ReadOnlyObservableCollection<InventoryItem<T>> _readOnlyItems;
         private readonly List<IInventoryPolicy<T>> _policies = new();
 
-        public ReadOnlyObservableCollection<InventoryItem<T>> Items => _readOnlyItems;
-        public IReadOnlyList<IInventoryPolicy<T>> Policies => _policies;
+        // --
+
+        public event NotifyCollectionChangedEventHandler ItemsChanged;
+
+
+
+        // ============================
+        // Constructor
+        // ============================
 
         public Inventory(params IInventoryPolicy<T>[] policies)
         {
             _readOnlyItems = new ReadOnlyObservableCollection<InventoryItem<T>>(_items);
+
+            _items.CollectionChanged += (sender, args) => ItemsChanged?.Invoke(this, args);
 
             if (policies != null && policies.Length > 0)
                 _policies.AddRange(policies);
@@ -26,9 +36,15 @@ namespace VForge.Inventories
                 _policies.Add(new AllowAllPolicy<T>());
         }
 
+
+
         // ============================
-        // Add
+        // Items API
         // ============================
+
+        public ReadOnlyObservableCollection<InventoryItem<T>> Items => _readOnlyItems;
+
+        // --
 
         public InventoryOperationResult CanAdd(InventoryItem<T> item)
             => Evaluate(
@@ -47,9 +63,7 @@ namespace VForge.Inventories
             return InventoryOperationResult.Ok();
         }
 
-        // ============================
-        // Remove
-        // ============================
+        // --
 
         public InventoryOperationResult CanRemove(InventoryItem<T> item)
             => Evaluate(
@@ -73,26 +87,26 @@ namespace VForge.Inventories
             return InventoryOperationResult.Ok();
         }
 
+
+
         // ============================
-        // Use (validation only for now)
+        // Policy API
         // ============================
+
+        public IReadOnlyList<IInventoryPolicy<T>> Policies => _policies;
+
+        // --
 
         public InventoryOperationResult CanUse(InventoryItem<T> item)
-            => Evaluate(
-                p => p.CanUse(this, item, out var r),
-                out var reason)
+        {
+            return Evaluate(
+                    p => p.CanUse(this, item, out var r),
+                    out var reason)
                 ? InventoryOperationResult.Ok()
                 : InventoryOperationResult.Fail(reason);
-
-        public InventoryOperationResult Use(InventoryItem<T> item)
-        {
-            // Phase 5: validation only
-            return CanUse(item);
         }
 
-        // ============================
-        // Policy evaluation helper
-        // ============================
+        // --
 
         private bool Evaluate(
             System.Func<IInventoryPolicy<T>, bool> check,
