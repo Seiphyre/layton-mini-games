@@ -16,7 +16,7 @@ namespace VForge.Gameplay
     {
         [Header("Scene References")]
         [SerializeField] private BoardView boardView;
-        [SerializeField] private InventoryView pieceInventoryPresenter;
+        //[SerializeField] private InventoryView pieceInventoryPresenter;
         //[SerializeField] private BoardDropAdapter boardDropAdapter;
         //[SerializeField] private InventoryDragAdapter inventoryDragAdapter;
 
@@ -53,7 +53,7 @@ namespace VForge.Gameplay
                 inventory.Add(new InventoryItem<PieceDefinition>(null, piece.Definition));
             }
 
-            pieceInventoryPresenter.SetList(inventory.Items);
+            //pieceInventoryPresenter.SetList(inventory.Items);
 
             // 4. Load starting pieces
             LoadStartingPieces(pieceBoard, piecesSetData);

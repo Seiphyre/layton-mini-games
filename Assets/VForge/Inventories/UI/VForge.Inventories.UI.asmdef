@@ -1,12 +1,9 @@
 {
-    "name": "VForge.Gameplay",
+    "name": "VForge.Inventories.UI",
     "rootNamespace": "",
     "references": [
-        "GUID:0a071830873f19342844f78d027c5bc2",
-        "GUID:2190eb98608bbb646b10747b17f6ecf6",
         "GUID:7b242b76a00668345862c8513e6382c0",
-        "GUID:b63ea1323daa1bf42a033701ec372c94",
-        "GUID:0403792766ad509489a0568add38cef5"
+        "GUID:b63ea1323daa1bf42a033701ec372c94"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
