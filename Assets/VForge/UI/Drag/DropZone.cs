@@ -15,7 +15,7 @@ using UnityEngine.EventSystems;
 ///   - OnDropInvalid
 ///
 /// </summary>
-public abstract class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IPointerMoveHandler
+public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IPointerMoveHandler
 {
     [Space]
 

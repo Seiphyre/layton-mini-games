@@ -4,7 +4,7 @@ using VForge.BoardPieces.Definitions;
 namespace VForge.Gameplay
 {
     [System.Serializable]
-    public class PieceData
+    public class InventoryItemData
     {
         public string Id;
         public PieceDefinition Definition;

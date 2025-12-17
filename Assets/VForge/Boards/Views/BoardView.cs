@@ -2,13 +2,14 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using VForge.Boards.Definitions;
+using VForge.Boards.Runtime;
 
 namespace VForge.Boards.Views
 {
     public class BoardView : UIElement, IBoardViewContext
     {
         [Header("Data")]
-        [SerializeField] private BoardData boardData;
+        [SerializeField] private BoardDefinition boardData;
 
         [Header("Board Settings")]
         [SerializeField] private float cellSize = 40f;
@@ -23,7 +24,7 @@ namespace VForge.Boards.Views
         [Header("Walls Settings")]
         [SerializeField] private WallView wallHorizontalPrefab;
         [SerializeField] private WallView wallVerticalPrefab;
-        [SerializeField] private JointView jointPrefab;
+        [SerializeField] private WallJointView jointPrefab;
 
         [SerializeField] private int wallsHLayerOrder = 3;
         [SerializeField] private int wallsVLayerOrder = 4;
@@ -50,7 +51,7 @@ namespace VForge.Boards.Views
         private readonly List<TileView> tileViews = new();
         private readonly List<WallView> wallHViews = new();
         private readonly List<WallView> wallVViews = new();
-        private readonly List<JointView> jointViews = new();
+        private readonly List<WallJointView> jointViews = new();
         private GridView gridView;
 
 
@@ -73,7 +74,7 @@ namespace VForge.Boards.Views
         public RectTransform GetLayer(BoardViewLayer layer)
             => layers.TryGetValue(layer, out var rt) ? rt : null;
 
-        public BoardData BoardData
+        public BoardDefinition BoardData
         {
             get => boardData;
             set
@@ -98,11 +99,32 @@ namespace VForge.Boards.Views
             );
         }
 
+        public bool TryLocalPositionToCellPosition(Vector2 localPos, out Vector2Int cell)
+        {
+            // localPos is in the same coordinate space as the board layers (pivot/anchor = bottom-left, origin at board bottom-left)
+            int x = Mathf.FloorToInt(localPos.x / CellSizePx);
+            int y = Mathf.FloorToInt(localPos.y / CellSizePx);
+
+            if (x < 0 || x >= GridWidth || y < 0 || y >= GridHeight)
+            {
+                cell = default;
+                return false;
+            }
+
+            cell = new Vector2Int(x, y);
+            return true;
+        }
 
 
         // ============================================================
         // Lifecycle
         // ============================================================
+
+        private void Awake()
+        {
+            if (boardData != null)
+                Rebuild();
+        }
 
         public void Rebuild()
         {

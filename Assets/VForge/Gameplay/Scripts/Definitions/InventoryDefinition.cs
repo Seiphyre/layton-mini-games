@@ -4,8 +4,8 @@ using UnityEngine;
 namespace VForge.Gameplay
 {
     [CreateAssetMenu(menuName = "Piece/Data Set")]
-    public class PieceDataSet : ScriptableObject
+    public class InventoryDefinition : ScriptableObject
     {
-        public List<PieceData> Pieces = new();
+        public List<InventoryItemData> Pieces = new();
     }
 }

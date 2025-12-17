@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace VForge.Boards.Views
 {
@@ -7,5 +7,6 @@ namespace VForge.Boards.Views
         float CellSizePx { get; }
         Vector2 BoardSizePx { get; }
         Vector2 CellPositionToLocalPosition(Vector2Int cell);
+        bool TryLocalPositionToCellPosition(Vector2 localPos, out Vector2Int cell);
     }
 }

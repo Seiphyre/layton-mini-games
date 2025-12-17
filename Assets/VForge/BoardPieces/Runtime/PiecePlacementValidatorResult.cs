@@ -1,14 +1,14 @@
 namespace VForge.BoardPieces.Runtime
 {
-    public struct PiecePlacementResult
+    public struct PiecePlacementValidatorResult
     {
         public bool IsValid;
         public string Reason;
 
-        public static PiecePlacementResult Valid()
+        public static PiecePlacementValidatorResult Valid()
             => new() { IsValid = true };
 
-        public static PiecePlacementResult Invalid(string reason)
+        public static PiecePlacementValidatorResult Invalid(string reason)
             => new() { IsValid = false, Reason = reason };
     }
 }

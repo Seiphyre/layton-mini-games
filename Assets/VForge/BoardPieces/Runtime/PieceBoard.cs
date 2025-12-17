@@ -29,54 +29,54 @@ namespace VForge.BoardPieces.Runtime
             return piece != null && pieces.Contains(piece);
         }
 
-        public PieceOperationResult CanPlace(PieceDefinition definition, Vector2Int origin)
+        public PieceBoardOperationResult CanPlace(PieceDefinition definition, Vector2Int origin)
         {
             var res = validator.Validate(definition, origin);
             return res.IsValid
-                ? PieceOperationResult.Ok()
-                : PieceOperationResult.Fail(res.Reason);
+                ? PieceBoardOperationResult.Ok()
+                : PieceBoardOperationResult.Fail(res.Reason);
         }
 
-        public PieceOperationResult TryPlace(PieceDefinition definition, Vector2Int origin, bool locked, out Piece piece)
+        public PieceBoardOperationResult TryPlace(PieceDefinition definition, Vector2Int origin, bool locked, out Piece piece)
         {
             var res = validator.Validate(definition, origin);
             if (!res.IsValid)
             {
                 piece = null;
-                return PieceOperationResult.Fail(res.Reason);
+                return PieceBoardOperationResult.Fail(res.Reason);
             }
 
             piece = new Piece(definition, origin, locked);
             pieces.Add(piece);
             OnPiecePlaced?.Invoke(piece);
 
-            return PieceOperationResult.Ok();
+            return PieceBoardOperationResult.Ok();
         }
 
-        public PieceOperationResult TryMove(Piece piece, Vector2Int origin)
+        public PieceBoardOperationResult TryMove(Piece piece, Vector2Int origin)
         {
             if (piece.IsLocked)
-                return PieceOperationResult.Fail("Piece is locked.");
+                return PieceBoardOperationResult.Fail("Piece is locked.");
 
             var res = validator.Validate(piece.Definition, origin, piece);
             if (!res.IsValid)
-                return PieceOperationResult.Fail(res.Reason);
+                return PieceBoardOperationResult.Fail(res.Reason);
 
             piece.SetCellPosition(origin);
             OnPieceMoved?.Invoke(piece);
-            return PieceOperationResult.Ok();
+            return PieceBoardOperationResult.Ok();
         }
 
-        public PieceOperationResult TryRemove(Piece piece)
+        public PieceBoardOperationResult TryRemove(Piece piece)
         {
             if (piece.IsLocked)
-                return PieceOperationResult.Fail("Piece is locked.");
+                return PieceBoardOperationResult.Fail("Piece is locked.");
 
             if (!pieces.Remove(piece))
-                return PieceOperationResult.Fail("Piece not found.");
+                return PieceBoardOperationResult.Fail("Piece not found.");
 
             OnPieceRemoved?.Invoke(piece);
-            return PieceOperationResult.Ok();
+            return PieceBoardOperationResult.Ok();
         }
 
         public Piece GetPieceAt(int x, int y)
@@ -88,34 +88,34 @@ namespace VForge.BoardPieces.Runtime
             return null;
         }
 
-        public PieceOperationResult TryLock(Piece piece)
+        public PieceBoardOperationResult TryLock(Piece piece)
         {
             if (piece == null)
-                return PieceOperationResult.Fail("Piece is null.");
+                return PieceBoardOperationResult.Fail("Piece is null.");
 
             if (!pieces.Contains(piece))
-                return PieceOperationResult.Fail("Piece not found on board.");
+                return PieceBoardOperationResult.Fail("Piece not found on board.");
 
             if (piece.IsLocked)
-                return PieceOperationResult.Fail("Piece is already locked.");
+                return PieceBoardOperationResult.Fail("Piece is already locked.");
 
             piece.Lock();
-            return PieceOperationResult.Ok();
+            return PieceBoardOperationResult.Ok();
         }
 
-        public PieceOperationResult TryUnlock(Piece piece)
+        public PieceBoardOperationResult TryUnlock(Piece piece)
         {
             if (piece == null)
-                return PieceOperationResult.Fail("Piece is null.");
+                return PieceBoardOperationResult.Fail("Piece is null.");
 
             if (!pieces.Contains(piece))
-                return PieceOperationResult.Fail("Piece not found on board.");
+                return PieceBoardOperationResult.Fail("Piece not found on board.");
 
             if (!piece.IsLocked)
-                return PieceOperationResult.Fail("Piece is not locked.");
+                return PieceBoardOperationResult.Fail("Piece is not locked.");
 
             piece.Unlock();
-            return PieceOperationResult.Ok();
+            return PieceBoardOperationResult.Ok();
         }
 
         public void Clear()

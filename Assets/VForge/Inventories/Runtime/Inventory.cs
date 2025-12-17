@@ -102,6 +102,7 @@ namespace VForge.Inventories
             {
                 if (!check(policy))
                 {
+                    // Todo: Provide real reason from Policy
                     reason = "Inventory policy rejected operation.";
                     return false;
                 }

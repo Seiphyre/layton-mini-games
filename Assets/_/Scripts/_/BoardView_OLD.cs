@@ -19,7 +19,7 @@ public class BoardView_OLD : MonoBehaviour
 {
     [Header("Board"), Space]
 
-    [SerializeField] private BoardData m_BoardData;
+    [SerializeField] private BoardDefinition m_BoardData;
 
     [SerializeField] private Vector2 m_BoardPivot = new Vector2(0, 1);
     [SerializeField] private int m_RowDir = -1; // 1: bottom-to-top, -1: top-to-bottom

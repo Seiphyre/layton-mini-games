@@ -1,5 +1,5 @@
 
-namespace VForge.Boards.Definitions
+namespace VForge.Boards.Runtime
 {
     public enum EdgeAxis
     {

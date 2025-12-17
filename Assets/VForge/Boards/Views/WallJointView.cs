@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace VForge.Boards.Views
 {
-    public class JointView : UIElement
+    public class WallJointView : UIElement
     {
         [SerializeField] private Image _image;
 

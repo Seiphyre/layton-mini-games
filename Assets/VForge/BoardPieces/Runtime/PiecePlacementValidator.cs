@@ -18,10 +18,10 @@ namespace VForge.BoardPieces.Runtime
             this.pieces = pieces;
         }
 
-        public PiecePlacementResult Validate(PieceDefinition def, Vector2Int origin, Piece ignoredPiece = null)
+        public PiecePlacementValidatorResult Validate(PieceDefinition def, Vector2Int origin, Piece ignoredPiece = null)
         {
             if (def == null || def.Shape == null)
-                return PiecePlacementResult.Invalid("Invalid piece definition.");
+                return PiecePlacementValidatorResult.Invalid("Invalid piece definition.");
 
             // Precompute candidate occupied cells
             var candidateCells = new HashSet<Vector2Int>();
@@ -32,12 +32,12 @@ namespace VForge.BoardPieces.Runtime
 
                 // 1. Bounds check
                 if (!board.IsInsideCell(cell))
-                    return PiecePlacementResult.Invalid(
+                    return PiecePlacementValidatorResult.Invalid(
                         $"Cell {cell} is outside board bounds.");
 
                 // 2. Tile existence check
                 if (!board.HasTile(cell))
-                    return PiecePlacementResult.Invalid(
+                    return PiecePlacementValidatorResult.Invalid(
                         $"No tile at cell {cell}.");
 
                 candidateCells.Add(cell);
@@ -53,7 +53,7 @@ namespace VForge.BoardPieces.Runtime
                 {
                     if (candidateCells.Contains(occupied))
                     {
-                        return PiecePlacementResult.Invalid(
+                        return PiecePlacementValidatorResult.Invalid(
                             $"Cell {occupied} is already occupied by another piece.");
                     }
                 }
@@ -68,12 +68,12 @@ namespace VForge.BoardPieces.Runtime
                     IsWallBlocking(candidateCells, cell, Vector2Int.left, EdgeAxis.Vertical, cell.x, cell.y) ||
                     IsWallBlocking(candidateCells, cell, Vector2Int.right, EdgeAxis.Vertical, cell.x + 1, cell.y))
                 {
-                    return PiecePlacementResult.Invalid($"Wall blocks piece at cell {cell}.");
+                    return PiecePlacementValidatorResult.Invalid($"Wall blocks piece at cell {cell}.");
                 }
             }
 
 
-            return PiecePlacementResult.Valid();
+            return PiecePlacementValidatorResult.Valid();
         }
 
         private bool IsWallBlocking(HashSet<Vector2Int> candidateCells, Vector2Int cell, Vector2Int dir, EdgeAxis axis, int edgeX, int edgeY)

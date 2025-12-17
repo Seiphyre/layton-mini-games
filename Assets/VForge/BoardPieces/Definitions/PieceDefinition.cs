@@ -6,8 +6,7 @@ namespace VForge.BoardPieces.Definitions
     public class PieceDefinition : ScriptableObject
     {
         public string Id;
-        public PieceShape Shape;
-        public PieceStyle Style;
-        public PieceTag Tag;
+        public ShapeDefinition Shape;
+        public StyleDefinition Style;
     }
 }

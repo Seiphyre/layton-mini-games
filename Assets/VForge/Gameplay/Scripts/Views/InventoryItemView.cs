@@ -5,7 +5,7 @@ using VForge.Inventories;
 
 namespace VForge.Gameplay
 {
-    public class PieceInventoryItemPresenter : DataPresenter<InventoryItem<PieceDefinition>>
+    public class InventoryItemView : DataPresenter<InventoryItem<PieceDefinition>>
     {
         [SerializeField] private Image icon;
         [SerializeField] private Image background;

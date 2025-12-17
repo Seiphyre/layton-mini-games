@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
-  m_Name: Ananas_Green_1x2_Bar
+  m_Name: Yellow_1x2_Bar
   m_EditorClassIdentifier: 
   Id: 1
   Shape: {fileID: 11400000, guid: a2673b76b5ce90d409c628518b6fb74a, type: 2}
-  Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}
+  Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}
   Tag: {fileID: 11400000, guid: 26ba9631b6111e2448ba18c8a25d3dda, type: 2}

@@ -4,11 +4,12 @@ using VForge.Boards.Definitions;
 
 namespace VForge.Boards.Runtime
 {
-    public class Board : IBoard
+    public class Board
     {
         // ================================
         // Public board dimensions
         // ================================
+
         public int Width { get; private set; }
         public int Height { get; private set; }
 
@@ -17,17 +18,18 @@ namespace VForge.Boards.Runtime
         // ================================
         // Internal storage
         // ================================
+
         private Tile[,] _tiles;
         private Wall[,] _horizontalWalls; // bottom edge of cell (x,y)
         private Wall[,] _verticalWalls;   // left edge of cell (x,y)
-        private readonly Dictionary<(int x, int y), BPiece> _pieces = new();
 
 
 
         // =====================================================
-        // Constructor (load runtime from BoardData)
+        // Constructor
         // =====================================================
-        public Board(BoardData data)
+
+        public Board(BoardDefinition data)
         {
             Width = data.Width;
             Height = data.Height;
@@ -44,62 +46,13 @@ namespace VForge.Boards.Runtime
             // Load Walls
             foreach (var w in data.Walls)
                 TryAddWall(w.Axis, w.X, w.Y);
-
-            // Load Pieces
-            foreach (var pd in data.Pieces)
-                TryAddPiece(pd.X, pd.Y);
         }
 
 
 
         // =====================================================
-        // Basic helper methods
+        // Board Operations
         // =====================================================
-
-        public bool IsCellFree(int x, int y)
-            => IsInsideCell(x, y) && !_pieces.ContainsKey((x, y));
-
-        public bool IsInsideCell(int x, int y)
-            => x >= 0 && x < Width && y >= 0 && y < Height;
-
-        public bool IsInsideCell(Vector2Int cell)
-            => IsInsideCell(cell.x, cell.y);
-
-        private bool IsInsideHorizontalEdge(int x, int y)
-            => x >= 0 && x < Width && y >= 0 && y <= Height;
-
-        private bool IsInsideVerticalEdge(int x, int y)
-            => x >= 0 && x <= Width && y >= 0 && y < Height;
-
-        // ---- Tile helpers ----
-        public bool HasTile(int x, int y)
-            => IsInsideCell(x, y) && _tiles[x, y] != null;
-
-        public bool HasTile(Vector2Int cell)
-            => HasTile(cell.x, cell.y);
-
-
-        // ---- Wall helpers ----
-        private bool HasHorizontalsWall(int x, int y)
-            => _horizontalWalls[x, y] != null;
-
-        private bool HasVerticalsWall(int x, int y)
-            => _verticalWalls[x, y] != null;
-
-        public bool HasWall(int x, int y, EdgeAxis axis)
-            => (axis == EdgeAxis.Horizontal)
-                ? HasHorizontalsWall(x, y)
-                : HasVerticalsWall(x, y);
-
-
-        // ---- Piece helpers ----
-        private bool HasPiece(int x, int y)
-            => _pieces.ContainsKey((x, y));
-
-        private bool IsValidAndFree(int x, int y)
-            => IsInsideCell(x, y) && !HasPiece(x, y);
-
-        // --
 
         public void Resize(int newWidth, int newHeight)
         {
@@ -135,13 +88,7 @@ namespace VForge.Boards.Runtime
                 }
             }
 
-            // 5. Remove pieces outside new bounds
-            var keys = new List<(int, int)>(_pieces.Keys);
-            foreach (var k in keys)
-                if (k.Item1 >= newWidth || k.Item2 >= newHeight)
-                    _pieces.Remove(k);
-
-            // 6. Replace internal data & update dimensions
+            // 5. Replace internal data & update dimensions
             _tiles = newTiles;
             _horizontalWalls = newHoriz;
             _verticalWalls = newVert;
@@ -150,13 +97,32 @@ namespace VForge.Boards.Runtime
             Height = newHeight;
         }
 
+        public bool IsInsideCell(int x, int y)
+        {
+            return x >= 0 && x < Width && y >= 0 && y < Height;
+        }
+        public bool IsInsideCell(Vector2Int cell) => IsInsideCell(cell.x, cell.y);
+
+        private bool IsInsideHorizontalEdge(int x, int y)
+        {
+            return x >= 0 && x < Width && y >= 0 && y <= Height;
+        }
+
+        private bool IsInsideVerticalEdge(int x, int y)
+        {
+            return x >= 0 && x <= Width && y >= 0 && y < Height;
+        }
+
+
 
         // =====================================================
-        // Read-only queries (IBoardReadOnly)
+        // Tiles Operations
         // =====================================================
 
         public Tile GetTile(int x, int y)
-            => IsInsideCell(x, y) ? _tiles[x, y] : null;
+        {
+            return IsInsideCell(x, y) ? _tiles[x, y] : null;
+        }
 
         public IEnumerable<Tile> GetAllTiles()
         {
@@ -171,48 +137,11 @@ namespace VForge.Boards.Runtime
             }
         }
 
-        public Wall GetHorizontalWall(int x, int y)
-            => IsInsideHorizontalEdge(x, y) ? _horizontalWalls[x, y] : null;
-
-        public Wall GetVerticalWall(int x, int y)
-            => IsInsideVerticalEdge(x, y) ? _verticalWalls[x, y] : null;
-
-        public Wall GetWall(int x, int y, EdgeAxis axis)
-            => (axis == EdgeAxis.Horizontal)
-                ? GetHorizontalWall(x, y)
-                : GetVerticalWall(x, y);
-
-        public IEnumerable<Wall> GetAllWalls()
+        public bool HasTile(int x, int y)
         {
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y <= Height; y++)
-                    if (_horizontalWalls[x, y] != null)
-                        yield return _horizontalWalls[x, y];
-            }
-
-            for (int x = 0; x <= Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                    if (_verticalWalls[x, y] != null)
-                        yield return _verticalWalls[x, y];
-            }
+            return IsInsideCell(x, y) && _tiles[x, y] != null;
         }
-
-        public BPiece GetPiece(int x, int y)
-            => _pieces.TryGetValue((x, y), out var p) ? p : null;
-
-        public IEnumerable<BPiece> GetAllPieces()
-        {
-            foreach (var entry in _pieces)
-                yield return entry.Value;
-        }
-
-
-
-        // =====================================================
-        // EDITOR OPERATIONS — Tiles (IBoard)
-        // =====================================================
+        public bool HasTile(Vector2Int cell) => HasTile(cell.x, cell.y);
 
         public bool TryAddTile(int x, int y)
         {
@@ -235,8 +164,59 @@ namespace VForge.Boards.Runtime
 
 
         // =====================================================
-        // EDITOR OPERATIONS — Walls (IBoard)
+        // Walls Operations
         // =====================================================
+
+        public Wall GetHorizontalWall(int x, int y)
+        {
+            return IsInsideHorizontalEdge(x, y) ? _horizontalWalls[x, y] : null;
+        }
+
+        public Wall GetVerticalWall(int x, int y)
+        {
+            return IsInsideVerticalEdge(x, y) ? _verticalWalls[x, y] : null;
+        }
+
+        public Wall GetWall(int x, int y, EdgeAxis axis)
+        {
+            return (axis == EdgeAxis.Horizontal)
+                    ? GetHorizontalWall(x, y)
+                    : GetVerticalWall(x, y);
+        }
+
+        public IEnumerable<Wall> GetAllWalls()
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y <= Height; y++)
+                    if (_horizontalWalls[x, y] != null)
+                        yield return _horizontalWalls[x, y];
+            }
+
+            for (int x = 0; x <= Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                    if (_verticalWalls[x, y] != null)
+                        yield return _verticalWalls[x, y];
+            }
+        }
+
+        private bool HasHorizontalsWall(int x, int y)
+        {
+            return IsInsideHorizontalEdge(x, y) && _horizontalWalls[x, y] != null;
+        }
+
+        private bool HasVerticalsWall(int x, int y)
+        {
+            return IsInsideVerticalEdge(x, y) && _verticalWalls[x, y] != null;
+        }
+
+        public bool HasWall(int x, int y, EdgeAxis axis)
+        {
+            return (axis == EdgeAxis.Horizontal)
+                    ? HasHorizontalsWall(x, y)
+                    : HasVerticalsWall(x, y);
+        }
 
         public bool TryAddWall(EdgeAxis axis, int x, int y)
         {
@@ -277,47 +257,9 @@ namespace VForge.Boards.Runtime
 
 
         // =====================================================
-        // GAMEPLAY OPERATIONS — Pieces (IBoardRuntime)
-        // =====================================================
-
-        public bool TryAddPiece(int x, int y)
-        {
-            if (!IsValidAndFree(x, y))
-                return false;
-
-            _pieces[(x, y)] = new BPiece(x, y);
-            return true;
-        }
-
-        public bool TryMovePiece(BPiece piece, int newX, int newY)
-        {
-            if (piece == null || !IsValidAndFree(newX, newY))
-                return false;
-
-            // Remove old cell
-            _pieces.Remove((piece.X, piece.Y));
-
-            // Update
-            piece.X = newX;
-            piece.Y = newY;
-
-            // Insert in new cell
-            _pieces[(newX, newY)] = piece;
-
-            return true;
-        }
-
-        public bool TryRemovePiece(int x, int y)
-        {
-            return _pieces.Remove((x, y));
-        }
-
-
-
-        // =====================================================
         //  SAVE RUNTIME MODEL BACK INTO BOARD DATA
         // =====================================================
-        public void SaveTo(BoardData data)
+        public void SaveTo(BoardDefinition data)
         {
             if (data == null)
                 return;
@@ -329,7 +271,6 @@ namespace VForge.Boards.Runtime
             // Clear existing lists
             data.Tiles.Clear();
             data.Walls.Clear();
-            data.Pieces.Clear();
 
             // Save tiles
             foreach (var tile in GetAllTiles())
@@ -338,10 +279,6 @@ namespace VForge.Boards.Runtime
             // Save walls
             foreach (var wall in GetAllWalls())
                 data.Walls.Add(wall.ToSaveData());
-
-            // Save pieces
-            foreach (var piece in GetAllPieces())
-                data.Pieces.Add(piece.ToSaveData());
         }
 
     }

@@ -16,12 +16,12 @@ public class BoardEditorWindow : EditorWindow
     private Color WALL_COLOR = new Color(0.55f, 0.30f, 0.10f);
     private Color PIECE_COLOR = new Color(0.2f, 0.5f, 0.8f, 0.5f);
 
-    private BoardData _data;
+    private BoardDefinition _data;
     private Board _runtime;
 
     private Vector2 _scroll;
 
-    private enum EditMode { Tiles, Walls, Pieces }
+    private enum EditMode { Tiles, Walls }
     private EditMode _mode = EditMode.Tiles;
 
     //private TileType _tilePaintType = TileType.Default;
@@ -49,7 +49,7 @@ public class BoardEditorWindow : EditorWindow
         // 1. BoardData field (top)
         EditorGUI.BeginChangeCheck();
 
-        var newData = (BoardData)EditorGUILayout.ObjectField("Board Data", _data, typeof(BoardData), false);
+        var newData = (BoardDefinition)EditorGUILayout.ObjectField("Board Data", _data, typeof(BoardDefinition), false);
         
         if (EditorGUI.EndChangeCheck())
         {
@@ -249,7 +249,6 @@ public class BoardEditorWindow : EditorWindow
 
                 _data.Tiles.Clear();
                 _data.Walls.Clear();
-                _data.Pieces.Clear();
 
                 _runtime = new Board(_data);
 
@@ -345,14 +344,6 @@ public class BoardEditorWindow : EditorWindow
                 EditorGUI.DrawRect(vRect, WALL_COLOR);
             }
         }
-
-        // Piece
-        var piece = _runtime.GetPiece(x, y);
-        if (piece != null)
-        {
-            EditorGUI.DrawRect(cell, PIECE_COLOR);
-            //GUI.Label(cell, piece.PieceId.Substring(0, Mathf.Min(3, piece.PieceId.Length)));
-        }
     }
 
     // -----------------------------------------------
@@ -411,13 +402,6 @@ public class BoardEditorWindow : EditorWindow
                 return;
             }
         }
-
-        if (_mode == EditMode.Pieces)
-        {
-            TogglePiece(x, y);
-            Repaint();
-            return;
-        }
     }
 
     // -----------------------------------------------
@@ -440,14 +424,5 @@ public class BoardEditorWindow : EditorWindow
             _runtime.TryRemoveWall(axis, x, y);
         else
             _runtime.TryAddWall(axis, x, y);
-    }
-
-    private void TogglePiece(int x, int y)
-    {
-        var existing = _runtime.GetPiece(x, y);
-        if (existing != null)
-            _runtime.TryRemovePiece(x, y);
-        else
-            _runtime.TryAddPiece(x, y);
     }
 }
