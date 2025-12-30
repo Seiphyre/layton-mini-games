@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -73,5 +73,21 @@ public class UIElement : MonoBehaviour
         );
 
         RectTransform.localPosition = (Vector3)(worldPos - pivotOffset);
+    }
+
+    public void SetOpacity(float opacity)
+    {
+        var canvasGroup = GetComponent<CanvasGroup>();
+
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+            canvasGroup.alpha = 1;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
+        }
+
+        canvasGroup.alpha = opacity;
     }
 }

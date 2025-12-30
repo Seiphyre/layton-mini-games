@@ -26,8 +26,8 @@ public class BoardEditorWindow : EditorWindow
 
     //private TileType _tilePaintType = TileType.Default;
     //private WallType _wallPaintType = WallType.Default;
-    private EdgeAxis _wallAxis = EdgeAxis.Horizontal;
-    private string _pieceIdInput = "Piece_01";
+    //private EdgeAxis _wallAxis = EdgeAxis.Horizontal;
+    //private string _pieceIdInput = "Piece_01";
 
 
 

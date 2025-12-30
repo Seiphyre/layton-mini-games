@@ -8,26 +8,28 @@ using System.Linq;
 using VForge.BoardPieces.Definitions;
 using VForge.Inventories;
 using VForge.Boards.Definitions;
-using VForge.Gameplay.UI;
+using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
     public class GameStartup : MonoBehaviour
     {
-        [Header("Scene References")]
-        [SerializeField] private BoardView boardView;
-        //[SerializeField] private InventoryView pieceInventoryPresenter;
-        //[SerializeField] private BoardDropAdapter boardDropAdapter;
-        //[SerializeField] private InventoryDragAdapter inventoryDragAdapter;
+        [Header("Interaction")]
+        [SerializeField] private DragController dragController;
+        [SerializeField] private DragProxyFactory dragProxyFactory;
 
-        [Header("Data References")]
-        [SerializeField] private InventoryDefinition piecesSetData;
+        [Header("Board")]
+        [SerializeField] private BoardView boardView;
+        [SerializeField] private PieceBoardView pieceBoardViewPrefab;
         [SerializeField] private BoardDefinition boardData;
 
-        [Header("Prefab References")]
-        [SerializeField] private PieceBoardView pieceBoardViewPrefab;
+        [Header("Inventory")]
+        [SerializeField] private PieceInventoryView pieceInventoryView;
+        [SerializeField] private InventoryDefinition piecesSetData;
 
         private PieceBoard pieceBoard;
+
+
 
         private void Start()
         {
@@ -45,25 +47,52 @@ namespace VForge.Gameplay
 
             boardView.AttachToLayer(BoardViewLayer.Pieces, pieceBoardView.RectTransform);
 
-            // 3. Build runtime inventory and link it to view
+            // 3. Build runtime inventory / board and link it to view
             var inventory = new Inventory<PieceDefinition>();
 
-            foreach (var piece in piecesSetData.Pieces)
+            foreach (var inventoryItem in piecesSetData.Pieces)
             {
-                inventory.Add(new InventoryItem<PieceDefinition>(null, piece.Definition));
+                if (inventoryItem.HasStartingPosition)
+                {
+                    var result = pieceBoard.TryPlace(
+                        inventoryItem.Definition,
+                        inventoryItem.StartingPosition,
+                        inventoryItem.Locked,
+                        out var piece);
+
+                    if (!result.Success)
+                    {
+                        Debug.LogError($"Failed to place starting piece {inventoryItem.Id}: {result.Reason}");
+                        continue;
+                    }
+                }
+                else
+                {
+                    inventory.Add(new InventoryItem<PieceDefinition>(null, inventoryItem.Definition));
+                }
             }
 
-            //pieceInventoryPresenter.SetList(inventory.Items);
+            pieceInventoryView.Bind(inventory);
 
-            // 4. Load starting pieces
-            LoadStartingPieces(pieceBoard, piecesSetData);
+            // Placement
 
-            // 5. Placement / Drag & Drop
-            var placePieceController = new PiecePlacementController(pieceBoard, inventory);
+            var placePieceController = new PiecePlacementController(pieceBoardView, boardView, pieceInventoryView);
 
-            //inventoryDragAdapter.Initialize(inventory);
-            //boardDropAdapter.Initialize(placePieceController);
+            var inventoryDragAdapter = new InventoryDragAdapter(dragController, pieceInventoryView, new InventoryDragOptions()
+            {
+                createProxy = dragProxyFactory != null,
+                ProxyFactory = dragProxyFactory
+            });
+            inventoryDragAdapter.DragStarted += placePieceController.BeginPlacement;
+            inventoryDragAdapter.DragEnded += placePieceController.CancelPlacement;
+
+            var boardDragAdapter = new BoardDragAdapter(dragController, pieceBoardView, boardView);
+            boardDragAdapter.DropOnCell += placePieceController.TryPlace;
+
+            var boardPlacementPreviewPresenter = new BoardPlacementPreviewPresenter(boardDragAdapter, placePieceController, dragController, pieceBoardView);
         }
+
+
 
         public void LoadStartingPieces(PieceBoard board, InventoryDefinition dataSet)
         {

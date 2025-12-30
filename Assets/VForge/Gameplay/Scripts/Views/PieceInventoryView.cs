@@ -12,7 +12,7 @@ namespace VForge.Gameplay
     public sealed class PieceInventoryView : InventoryView<PieceDefinition>
     {
         [SerializeField]
-        private InventoryItemViewBase _itemViewPrefab;
+        private PieceInventoryItemView _itemViewPrefab;
 
         [SerializeField]
         private Transform _contentRoot;
@@ -28,18 +28,6 @@ namespace VForge.Gameplay
             view.transform.SetAsLastSibling();
 
             return view;
-        }
-
-        protected override void OnBind()
-        {
-            Inventory.ItemsChanged += OnInventoryCollectionChanged;
-            RebuildAllItems();
-        }
-
-        protected override void OnUnbind()
-        {
-            Inventory.ItemsChanged -= OnInventoryCollectionChanged;
-            Clear();
         }
     }
 }

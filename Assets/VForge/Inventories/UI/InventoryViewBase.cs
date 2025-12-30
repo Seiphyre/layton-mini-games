@@ -9,16 +9,6 @@ namespace VForge.Inventories.UI
     public abstract class InventoryViewBase : UIElement
     {
         /// <summary>
-        /// Raised when a drag starts from an inventory item.
-        /// </summary>
-        public event Action<object> ItemDragStarted;
-
-        /// <summary>
-        /// Raised when a drag ends from an inventory item.
-        /// </summary>
-        public event Action<object> ItemDragEnded;
-
-        /// <summary>
         /// Bind this view to a runtime inventory.
         /// </summary>
         public abstract void Bind(object inventory);
@@ -31,14 +21,6 @@ namespace VForge.Inventories.UI
         /// <summary>
         /// Clear all item visuals.
         /// </summary>
-        public abstract void Clear();
-
-        // --------------------------------------------------
-        // Protected helpers for derived classes
-        // --------------------------------------------------
-
-        protected void RaiseItemDragStarted(object item) => ItemDragStarted?.Invoke(item);
-
-        protected void RaiseItemDragEnded(object item) => ItemDragEnded?.Invoke(item);
+        public abstract void ClearView();
     }
 }

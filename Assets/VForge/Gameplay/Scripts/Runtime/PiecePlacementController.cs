@@ -1,96 +1,107 @@
+using System;
 using UnityEngine;
 using VForge.BoardPieces.Definitions;
 using VForge.BoardPieces.Runtime;
+using VForge.BoardPieces.Views;
+using VForge.Boards.Views;
 using VForge.Inventories;
+using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
     /// <summary>
-    /// Pure gameplay controller responsible for placing pieces on the board.
-    /// Knows nothing about UI, dragging, or views.
+    /// Gameplay controller responsible for placement preview (ghost)
+    /// while dragging a piece from the inventory.
+    ///
+    /// Phase 3.4 scope:
+    /// - Show / move / hide preview
+    /// - Validate placement
+    /// - NO placement commit
+    /// - NO inventory mutation
+    /// - NO DropZone usage
     /// </summary>
     public sealed class PiecePlacementController
     {
-        private readonly PieceBoard _pieceBoard;
-        private readonly Inventory<PieceDefinition> _inventory;
 
-        private InventoryItem<PieceDefinition> _activeItem;
+        private readonly PieceBoardView _pieceBoardView;
+        private readonly InventoryView<PieceDefinition> _inventoryView;
+        private readonly BoardView _boardView;
 
-        public bool HasActivePlacement => _activeItem != null;
+        private InventoryItem<PieceDefinition> activeItem;
+
+        public bool HasActivePlacement => activeItem != null;
+        public PieceDefinition ActiveDefinition => activeItem?.Data;
+
+
+
+        // --------------------------------------------------
+        // Constructor
+        // --------------------------------------------------
 
         public PiecePlacementController(
-            PieceBoard pieceBoard,
-            Inventory<PieceDefinition> inventory)
+            PieceBoardView pieceBoardView,
+            BoardView boardView,
+            InventoryView<PieceDefinition> inventoryView)
         {
-            _pieceBoard = pieceBoard;
-            _inventory = inventory;
+            _inventoryView = inventoryView;
+            _pieceBoardView = pieceBoardView;
+            _boardView = boardView;
+
+            // Inventory drag intent
+            //_inventoryView.ItemDragStarted += OnItemDragStarted;
+            //_inventoryView.ItemDragEnded += OnItemDragEnded;
+
+            // Board hover intent
+            //_boardView.HoverStarted += OnBoardHoverStarted;
+            //_boardView.CellHovered += OnBoardCellHovered;
+            //_boardView.HoverExited += OnBoardHoverExited;
+            //_boardView.Dropped += OnBoardDrop;
         }
 
         // --------------------------------------------------
-        // Placement lifecycle
+        // Inventory callbacks
         // --------------------------------------------------
 
-        public InventoryOperationResult BeginPlacement(
-            InventoryItem<PieceDefinition> item)
+        public void BeginPlacement(InventoryItem<PieceDefinition> item)
         {
-            if (item == null)
-                return InventoryOperationResult.Fail("Item is null.");
-
-            if (HasActivePlacement)
-                return InventoryOperationResult.Fail("Placement already active.");
-
-            var canUse = _inventory.CanUse(item);
-            if (!canUse.Success)
-                return canUse;
-
-            _activeItem = item;
-            return InventoryOperationResult.Ok();
-        }
-
-        public InventoryOperationResult CanPlaceAt(Vector2Int cell)
-        {
-            if (_activeItem == null)
-                return InventoryOperationResult.Fail("No active item.");
-
-            var def = _activeItem.Data;
-
-            var res = _pieceBoard.CanPlace(def, cell);
-            return res.Success
-                ? InventoryOperationResult.Ok()
-                : InventoryOperationResult.Fail(res.Reason);
-        }
-
-        public InventoryOperationResult CommitPlacement(Vector2Int cell)
-        {
-            if (_activeItem == null)
-                return InventoryOperationResult.Fail("No active item.");
-
-            var def = _activeItem.Data;
-
-            var placeResult = _pieceBoard.TryPlace(
-                def,
-                cell,
-                locked: false,
-                out var piece);
-
-            if (!placeResult.Success)
-                return InventoryOperationResult.Fail(placeResult.Reason);
-
-            var removeResult = _inventory.Remove(_activeItem);
-            if (!removeResult.Success)
-            {
-                // rollback
-                _pieceBoard.TryRemove(piece);
-                return removeResult;
-            }
-
-            _activeItem = null;
-            return InventoryOperationResult.Ok();
+            activeItem = item;
         }
 
         public void CancelPlacement()
         {
-            _activeItem = null;
+            activeItem = null;
+        }
+
+        public void TryPlace(Vector2Int cellPosition)
+        {
+            if (activeItem == null)
+                return;
+
+             // --
+
+            var boardOpResult = _pieceBoardView.PieceBoard.CanPlace(activeItem.Data, cellPosition);
+
+            if (!boardOpResult.Success)
+                return;
+
+            var inventoryOpResult = _inventoryView.Inventory.CanRemove(activeItem);
+
+            if (!inventoryOpResult.Success)
+                return;
+
+            // --
+
+            _pieceBoardView.PieceBoard.TryPlace(
+                activeItem.Data,
+                cellPosition,
+                locked: false,
+                out _);
+
+            _inventoryView.Inventory.Remove(activeItem);
+
+            // --
+
+            activeItem = null;
         }
     }
 }

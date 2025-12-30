@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using UnityEngine;
 
 namespace VForge.Inventories.UI
 {
@@ -14,6 +15,11 @@ namespace VForge.Inventories.UI
 
         protected readonly List<InventoryItemViewBase> _activeViews = new();
         protected readonly Stack<InventoryItemViewBase> _pooledViews = new();
+
+        public event Action<InventoryItemViewBase> OnItemViewCreated;
+        public event Action<InventoryItemViewBase> OnItemViewDestroyed;
+
+        public IReadOnlyList<InventoryItemViewBase> ItemViews => _activeViews;
 
 
 
@@ -32,6 +38,8 @@ namespace VForge.Inventories.UI
             Unbind();
 
             Inventory = typedInventory;
+            Inventory.ItemsChanged += OnInventoryCollectionChanged;
+
             OnBind();
         }
 
@@ -41,20 +49,20 @@ namespace VForge.Inventories.UI
                 return;
 
             OnUnbind();
+
+            Inventory.ItemsChanged -= OnInventoryCollectionChanged;
             Inventory = null;
         }
 
-        /// <summary>
-        /// Called after Inventory has been assigned.
-        /// Subscribe to events, build views, etc.
-        /// </summary>
-        protected abstract void OnBind();
+        protected virtual void OnBind()
+        {
+            BuildView();
+        }
 
-        /// <summary>
-        /// Called before Inventory is cleared.
-        /// Unsubscribe, clear views, etc.
-        /// </summary>
-        protected abstract void OnUnbind();
+        protected virtual void OnUnbind()
+        {
+            ClearView();
+        }
 
 
 
@@ -62,7 +70,7 @@ namespace VForge.Inventories.UI
         // Pooling
         // --------------------------------------------------
 
-        protected InventoryItemViewBase AcquireItemView()
+        protected InventoryItemViewBase AcquireItemView(InventoryItem<T> item)
         {
             InventoryItemViewBase view;
 
@@ -76,7 +84,8 @@ namespace VForge.Inventories.UI
                 view = CreateItemView();
             }
 
-            _activeViews.Add(view);
+            view.Bind(item);
+
             return view;
         }
 
@@ -88,7 +97,6 @@ namespace VForge.Inventories.UI
             view.Unbind();
             view.gameObject.SetActive(false);
 
-            _activeViews.Remove(view);
             _pooledViews.Push(view);
         }
 
@@ -96,39 +104,49 @@ namespace VForge.Inventories.UI
 
 
 
+
         // --------------------------------------------------
         // View API
         // --------------------------------------------------
 
-        protected void RebuildAllItems()
+        protected void BuildView()
         {
-            Clear();
+            ClearView();
 
             if (Inventory == null)
                 return;
 
             foreach (var item in Inventory.Items)
             {
-                var view = AcquireItemView();
-                view.Bind(item);
+                var itemView = AcquireItemView(item);
+                _activeViews.Add(itemView);
+
+                OnItemViewCreated?.Invoke(itemView);
             }
         }
 
-        public override void Clear()
+        public override void ClearView()
         {
             for (int i = _activeViews.Count - 1; i >= 0; i--)
             {
+                OnItemViewDestroyed?.Invoke(_activeViews[i]);
+
                 ReleaseItemView(_activeViews[i]);
+                _activeViews.RemoveAt(i);
             }
 
-            _activeViews.Clear();
+            //_activeViews.Clear();
         }
 
-        protected void OnInventoryCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+
+
+        // --------------------------------------------------
+        // Event Helpers
+        // --------------------------------------------------
+
+        protected virtual void OnInventoryCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // Simple & safe strategy for now:
-            // full rebuild on any structural change
-            RebuildAllItems();
+            BuildView();
         }
     }
 }

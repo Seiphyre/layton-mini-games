@@ -7,8 +7,13 @@ namespace VForge.Inventories.UI
     /// </summary>
     public abstract class InventoryItemView<T> : InventoryItemViewBase
     {
-        public InventoryItem<T> Item { get; private set; }
+        public InventoryItem<T> TypedItem { get; private set; }
 
+
+
+        // --------------------------------------------------
+        // Data Binding API
+        // --------------------------------------------------
 
         public override void Bind(object item)
         {
@@ -18,16 +23,20 @@ namespace VForge.Inventories.UI
             if (item is not InventoryItem<T> typedItem)
                 throw new ArgumentException($"Invalid item type. Expected InventoryItem<{typeof(T).Name}>.");
 
-            Item = typedItem;
+            Item = item;
+            TypedItem = typedItem;
+
             OnBind();
         }
 
         public override void Unbind()
         {
-            if (Item == null)
+            if (TypedItem == null)
                 return;
 
             OnUnbind();
+
+            TypedItem = null;
             Item = null;
         }
 

@@ -10,8 +10,9 @@ namespace VForge.BoardPieces.Runtime
 
         public int Id { get; }
         public PieceDefinition Definition { get; }
-        public Vector2Int CellPosition { get; private set; }
-        public bool IsLocked { get; private set; }
+        public Vector2Int CellPosition { get; internal set; }
+        public bool IsLocked { get; internal set; }
+
 
         public Piece(PieceDefinition definition, Vector2Int cellPosition, bool locked)
         {
@@ -21,7 +22,6 @@ namespace VForge.BoardPieces.Runtime
             IsLocked = locked;
         }
 
-        public void SetCellPosition(Vector2Int cellPosition) => CellPosition = cellPosition;
         public void Lock() => IsLocked = true;
         public void Unlock() => IsLocked = false;
 

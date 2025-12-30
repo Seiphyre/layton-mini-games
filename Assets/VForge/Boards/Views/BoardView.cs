@@ -3,10 +3,12 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using VForge.Boards.Definitions;
 using VForge.Boards.Runtime;
+using System;
+using UnityEngine.EventSystems;
 
 namespace VForge.Boards.Views
 {
-    public class BoardView : UIElement, IBoardViewContext
+    public class BoardView : UIElement, IBoardViewContext, IPointerMoveHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("Data")]
         [SerializeField] private BoardDefinition boardData;
@@ -53,7 +55,14 @@ namespace VForge.Boards.Views
         private readonly List<WallView> wallVViews = new();
         private readonly List<WallJointView> jointViews = new();
         private GridView gridView;
+        private DropZone dropZone;
+        private Vector2Int? HoveredCell;
 
+
+        public event Action HoverStarted;
+        public event Action<Vector2Int> CellHovered;
+        public event Action HoverExited;
+        public event Action<object, Vector2Int> Dropped;
 
 
         // ============================================================
@@ -115,6 +124,13 @@ namespace VForge.Boards.Views
             return true;
         }
 
+        public bool TryScreenPositionToCellPosition(Vector2 screenPos, out Vector2Int cell)
+        {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(boardSpace, screenPos, null, out Vector2 localPoint);
+        
+            return TryLocalPositionToCellPosition(localPoint, out cell);
+        }
+
 
         // ============================================================
         // Lifecycle
@@ -122,8 +138,22 @@ namespace VForge.Boards.Views
 
         private void Awake()
         {
+            dropZone = GetComponent<DropZone>();
+
             if (boardData != null)
                 Rebuild();
+        }
+
+        private void OnEnable()
+        {
+            if (dropZone != null)
+                dropZone.onDropped.AddListener(OnDropZoneDropped);
+        }
+
+        private void OnDisable()
+        {
+            if (dropZone != null)
+                dropZone.onDropped.RemoveListener(OnDropZoneDropped);
         }
 
         public void Rebuild()
@@ -481,6 +511,37 @@ namespace VForge.Boards.Views
 
             tex.Apply();
             return tex;
+        }
+
+        //
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            HoverStarted?.Invoke();
+            OnPointerMove(eventData);
+        }
+
+        public void OnPointerMove(PointerEventData eventData)
+        {
+            if (TryScreenPositionToCellPosition(eventData.position, out var cellPosition))
+            {
+                CellHovered?.Invoke(cellPosition);
+                HoveredCell = cellPosition;
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            HoverExited?.Invoke();
+            HoveredCell = null;
+        }
+
+        private void OnDropZoneDropped(Draggable draggable)
+        {
+            if (draggable == null)
+                return;
+
+            Dropped?.Invoke(draggable.Payload, HoveredCell.Value);
         }
     }
 }

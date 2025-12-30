@@ -8,6 +8,8 @@ namespace VForge.Inventories.UI
     /// </summary>
     public abstract class InventoryItemViewBase : UIElement
     {
+        public object Item { get; protected set; }
+
         /// <summary>
         /// Bind this view to a runtime inventory item.
         /// </summary>

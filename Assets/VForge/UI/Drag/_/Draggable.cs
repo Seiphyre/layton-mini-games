@@ -116,21 +116,21 @@ public class Draggable : UIElement, IBeginDragHandler, IDragHandler, IEndDragHan
 
         IsDragging = false;
 
-        if (DropZone == null)
-        {
+        //if (DropZone == null)
+        //{
             dragRectTransform.SetParent(_originalParent);
             dragRectTransform.SetSiblingIndex(_originalSiblingIndex);
-        }
-        else
-        {
-            dragRectTransform.SetParent(DropZone.transform);
-            dragRectTransform.SetAsLastSibling();
-        }
+        //}
+        //else
+        //{
+        //    dragRectTransform.SetParent(DropZone.transform);
+        //    dragRectTransform.SetAsLastSibling();
+        //}
 
         _canvasGroup.blocksRaycasts = _originalBlocksRaycasts;
 
-        Payload = null;
-
         onDragEnd?.Invoke(DropZone);
+
+        Payload = null;
     }
 }

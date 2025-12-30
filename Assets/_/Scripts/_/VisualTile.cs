@@ -16,7 +16,7 @@ public class VisualTile : VisualElement
 
     [Header("Borders"), Space]
 
-    [SerializeField] private bool m_ShowBorders = true;
+    //[SerializeField] private bool m_ShowBorders = true;
     [SerializeField] private int m_BorderThickness = 2;
     [SerializeField] private Color m_BorderColor = Color.black;
 

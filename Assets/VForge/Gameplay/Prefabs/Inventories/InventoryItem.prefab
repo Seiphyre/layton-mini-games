@@ -167,8 +167,7 @@ GameObject:
   - component: {fileID: 6072777201102990316}
   - component: {fileID: 3777079435654708437}
   - component: {fileID: 4661257942864512086}
-  - component: {fileID: 8172943393551576410}
-  - component: {fileID: 628917063821692930}
+  - component: {fileID: 7195083478309398205}
   m_Layer: 5
   m_Name: InventoryItem
   m_TagString: Untagged
@@ -243,7 +242,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &8172943393551576410
+--- !u!114 &7195083478309398205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,33 +251,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 880710582341895922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 890e0a52448f962419db4f18606870a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 4974ab7e009555d4c97e39f30d613347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
-  background: {fileID: 1905350594297469001}
---- !u!114 &628917063821692930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 880710582341895922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c33a1d1b443384942a1ddbd8ea06e049, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragRectTransform: {fileID: 6072777201102990316}
-  onDragStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onDragging:
-    m_PersistentCalls:
-      m_Calls: []
-  onDragEnd:
-    m_PersistentCalls:
-      m_Calls: []
+  _background: {fileID: 1905350594297469001}
 --- !u!1 &2086878088459211885
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,7 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

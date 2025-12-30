@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using VForge.BoardPieces.Definitions;
 using VForge.BoardPieces.Runtime;
 using VForge.Boards.Views;
 
@@ -12,7 +13,10 @@ namespace VForge.BoardPieces.Views
 
         private IBoardViewContext viewContext;
         private PieceBoard board;
+        private PieceView previewView;
         private readonly Dictionary<int, PieceView> pieceViews = new();
+
+        public PieceBoard PieceBoard { get { return board; } }
 
         public void Initialize(PieceBoard board, IBoardViewContext viewContext)
         {
@@ -52,6 +56,8 @@ namespace VForge.BoardPieces.Views
 
             foreach (var p in board.PlacedPieces)
                 CreatePieceView(p);
+
+            HidePreview();
         }
 
         private void ResizeView()
@@ -59,33 +65,113 @@ namespace VForge.BoardPieces.Views
             SetSize(viewContext.BoardSizePx);
         }
 
-        private void OnPlaced(Piece p) => CreatePieceView(p);
+        private void OnPlaced(Piece p)
+        {
+            CreatePieceView(p);
+        }
 
         private void OnMoved(Piece p)
         {
-            if (pieceViews.TryGetValue(p.Id, out var view))
-                view.UpdateView();
+            RefreshPieceView(p);
         }
 
         private void OnRemoved(Piece p)
         {
-            Destroy(pieceViews[p.Id].gameObject);
-            pieceViews.Remove(p.Id);
+            DestroyPieceView(p);
         }
 
-        private void CreatePieceView(Piece p)
+        private void CreatePieceView(Piece piece)
         {
             var v = Instantiate(piecePrefab, boardRoot);
 
-            v.name = $"Piece {p.Id} ({p.CellPosition.x},{p.CellPosition.y})";
+            v.name = $"Piece {piece.Id} ({piece.CellPosition.x},{piece.CellPosition.y})";
 
             v.RectTransform.anchorMin = Vector2.zero;
             v.RectTransform.anchorMax = Vector2.zero;
             v.RectTransform.pivot = Vector2.zero;
 
-            v.Initialize(p, viewContext);
+            v.Initialize(piece, viewContext);
+            v.SetLocalPosition(viewContext.CellPositionToLocalPosition(piece.CellPosition));
 
-            pieceViews[p.Id] = v;
+            pieceViews[piece.Id] = v;
         }
+
+        private void DestroyPieceView(Piece piece)
+        {
+            if (pieceViews.TryGetValue(piece.Id, out var pieceView))
+            {
+                Destroy(pieceView.gameObject);
+                pieceViews.Remove(piece.Id);
+            }
+        }
+
+        private void RefreshPieceView(Piece piece)
+        {
+            if (pieceViews.TryGetValue(piece.Id, out var pieceView))
+            {
+                pieceView.SetLocalPosition(viewContext.CellPositionToLocalPosition(piece.CellPosition));
+                pieceView.RefreshView();
+            }
+        }
+
+        // --------------------------------------------------
+        // Preview (ghost) API — Phase 3.4
+        // --------------------------------------------------
+
+        public void CreatePreview(PieceDefinition definition)
+        {
+            if (previewView == null)
+            {
+                previewView = Instantiate(piecePrefab, boardRoot);
+                previewView.name = "Preview Piece";
+
+                previewView.RectTransform.anchorMin = Vector2.zero;
+                previewView.RectTransform.anchorMax = Vector2.zero;
+                previewView.RectTransform.pivot = Vector2.zero;
+
+                previewView.Initialize(new Piece(definition, Vector2Int.zero, locked: false), viewContext);
+                previewView.SetPreviewMode(true);
+            }
+        }
+
+        public void DestroyPreview()
+        {
+            if (previewView != null)
+            {
+                Destroy(previewView.gameObject);
+
+                previewView = null;
+            }
+        }
+
+        public void ShowPreview()
+        {
+            if (previewView != null)
+                previewView.gameObject.SetActive(true);
+        }
+
+        public void HidePreview()
+        {
+            if (previewView != null)
+                previewView.gameObject.SetActive(false);
+        }
+
+        public void SetPreviewPosition(Vector2Int cell)
+        {
+            if (previewView == null)
+                return;
+
+            //previewView.SetCellPosition(cell);
+            previewView.SetLocalPosition(viewContext.CellPositionToLocalPosition(cell));
+        }
+
+        public void SetPreviewValidity(bool isValid)
+        {
+            if (previewView == null)
+                return;
+
+            previewView.SetValidity(isValid);
+        }
+
     }
 }

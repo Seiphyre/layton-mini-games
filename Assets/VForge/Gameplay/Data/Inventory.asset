@@ -23,3 +23,13 @@ MonoBehaviour:
     Locked: 0
     HasStartingPosition: 1
     StartingPosition: {x: 3, y: 2}
+  - Id: 3
+    Definition: {fileID: 11400000, guid: bc57116c23ae9b140875eb301d0038ec, type: 2}
+    Locked: 0
+    HasStartingPosition: 0
+    StartingPosition: {x: 0, y: 0}
+  - Id: 4
+    Definition: {fileID: 11400000, guid: bc57116c23ae9b140875eb301d0038ec, type: 2}
+    Locked: 0
+    HasStartingPosition: 0
+    StartingPosition: {x: 0, y: 0}

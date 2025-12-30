@@ -640,7 +640,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1346912332701166847}
   - component: {fileID: 5057009536826296789}
-  - component: {fileID: 2409051100157824197}
   - component: {fileID: 5896620214001361805}
   m_Layer: 5
   m_Name: ShopItemView
@@ -692,26 +691,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2409051100157824197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6358289454627605074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e13a9fea646c0204088de12056e7a668, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <SelectionToggle>k__BackingField: {fileID: 5896620214001361805}
-  m_ContentPanel: {fileID: 8504417024483482721}
-  m_ItemPanel: {fileID: 6747913232813156022}
-  m_NormalImg1: {fileID: 472394113964234585}
-  m_NormalImg2: {fileID: 7965236484294361086}
-  m_SimplifiedImg: {fileID: 6989935912066517558}
-  _showNormalSprite: 0
-  _showSimplifiedSprite: 0
 --- !u!114 &5896620214001361805
 MonoBehaviour:
   m_ObjectHideFlags: 0

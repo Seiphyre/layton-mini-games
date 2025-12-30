@@ -2235,8 +2235,7 @@ GameObject:
   - component: {fileID: 1194505212226137820}
   - component: {fileID: 7695016326283155902}
   - component: {fileID: 5244989313843358963}
-  - component: {fileID: 1135954052840402794}
-  - component: {fileID: 256706725814872779}
+  - component: {fileID: 5996453514819989936}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -2316,7 +2315,7 @@ MonoBehaviour:
   gridThickness: 2
   gridColor: {r: 0.16, g: 0.16, b: 0.16, a: 0.9019608}
   pieceLayerOrder: 2
---- !u!114 &1135954052840402794
+--- !u!114 &5996453514819989936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2325,38 +2324,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3095439035862831355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cedd7662824bb1c4f98793c1745bf563, type: 3}
+  m_Script: {fileID: 11500000, guid: 292373d3ae048994ab7f05745329f584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  onMove:
-    m_PersistentCalls:
-      m_Calls: []
-  onExit:
-    m_PersistentCalls:
-      m_Calls: []
-  onDropped:
-    m_PersistentCalls:
-      m_Calls: []
-  onDropRejected:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &256706725814872779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3095439035862831355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fc7004193011674a8bef281e32fd9cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dropZone: {fileID: 1135954052840402794}
-  boardView: {fileID: 5244989313843358963}
 --- !u!1 &3137552225609723071
 GameObject:
   m_ObjectHideFlags: 0
