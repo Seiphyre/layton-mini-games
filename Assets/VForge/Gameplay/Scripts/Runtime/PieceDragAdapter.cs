@@ -41,6 +41,9 @@ namespace VForge.Gameplay
 
         private void OnPieceViewCreated(PieceView view)
         {
+            if (view.Piece.IsLocked)
+                return;
+
             var dragSource = ComponentUtils.GetOrAddComponent<DragSource>(view.gameObject);
 
             if (dragSource != null)
@@ -70,10 +73,7 @@ namespace VForge.Gameplay
 
         private void OnDragEnded(DragSession session)
         {
-            if (session.Payload != null && session.Payload is InventoryItemView<PieceDefinition> inventoryItemView)
-            {
-                DragEnded?.Invoke();
-            }
+            DragEnded?.Invoke();
         }
 
     }
