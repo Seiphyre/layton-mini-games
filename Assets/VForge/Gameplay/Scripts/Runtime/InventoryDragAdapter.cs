@@ -15,6 +15,8 @@ namespace VForge.Gameplay
         private readonly PieceInventoryView inventoryView;
         private readonly InventoryDragOptions options;
 
+        private bool isDragging = false;
+
         public InventoryDragAdapter(DragController dragSystem, PieceInventoryView inventoryView, InventoryDragOptions options = null)
         {
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem)); ;
@@ -62,16 +64,19 @@ namespace VForge.Gameplay
         {
             if (session.Payload != null && session.Payload is InventoryItem<PieceDefinition> inventoryItem)
             {
+                isDragging = true;
                 DragStarted?.Invoke(inventoryItem);
             }
         }
 
         private void OnDragEnded(DragSession session)
         {
-            if (session.Payload != null && session.Payload is InventoryItem<PieceDefinition> inventoryItem)
-            {
-                DragEnded?.Invoke();
-            }
+            if (!isDragging)
+                return;
+
+            DragEnded?.Invoke();
+
+            isDragging = false;
         }
 
     }

@@ -124,8 +124,11 @@ namespace VForge.Gameplay
 
                 if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Move)
                 {
-                    piecePlacementController.BeginRemovePlacement(piecePlacementController.CurrentPlacement.Piece);
+                    var piece = piecePlacementController.CurrentPlacement.Piece;
+
+                    piecePlacementController.BeginRemovePlacement(piece);
                     piecePlacementController.ConfirmPlacement();
+                    inventoryUsageController.ReturnItem(new InventoryItem<PieceDefinition>(null, piece.Definition));
                 }
             };
 

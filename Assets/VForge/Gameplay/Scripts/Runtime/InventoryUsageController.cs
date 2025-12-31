@@ -65,5 +65,13 @@ namespace VForge.Gameplay
 
             return inventory.CanRemove(reservedItem);
         }
+
+        public InventoryOperationResult ReturnItem(InventoryItem<PieceDefinition> item)
+        {
+            if (item == null)
+                return InventoryOperationResult.Fail("Item is null.");
+
+            return inventory.Add(item);
+        }
     }
 }

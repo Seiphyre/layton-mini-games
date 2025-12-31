@@ -18,6 +18,8 @@ namespace VForge.Gameplay
         private readonly PieceBoardView pieceBoardView;
         private readonly PieceDragOptions options;
 
+        private bool isDragging = false;
+
         public PieceDragAdapter(DragController dragSystem, PieceBoardView pieceBoardView, PieceDragOptions options = null)
         {
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem)); ;
@@ -69,17 +71,26 @@ namespace VForge.Gameplay
         {
             if (session.Payload != null && session.Payload is Piece piece)
             {
+                isDragging = true;
                 DragStarted?.Invoke(piece);
             }
         }
 
         private void OnDragEnded(DragSession session)
         {
+            if (!isDragging)
+                return;
+
             DragEnded?.Invoke();
+
+            isDragging = false;
         }
 
         private void OnDragCancelled(DragSession session, DragCancelReason reason)
         {
+            if (!isDragging)
+                return;
+
             DragCancelled?.Invoke(reason);
         }
     }
