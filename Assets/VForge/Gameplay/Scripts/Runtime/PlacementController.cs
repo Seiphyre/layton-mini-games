@@ -27,6 +27,7 @@ namespace VForge.Gameplay
 
         public PlacementInfo CurrentPlacement { get; private set; } = PlacementInfo.None();
 
+        private Vector2Int? _placementPosition;
 
         public bool IsPlacing => CurrentPlacement.Kind != PlacementType.None;
 
@@ -66,7 +67,15 @@ namespace VForge.Gameplay
             CurrentPlacement = PlacementInfo.None();
         }
 
-        public PlacementOperationResult ConfirmPlacement(Vector2Int cellPosition)
+        public void SetPlacementPosition(Vector2Int position)
+        {
+            if (!IsPlacing)
+                return;
+
+            _placementPosition = position;
+        }
+
+        public PlacementOperationResult ConfirmPlacement()
         {
             if (!IsPlacing)
                 return PlacementOperationResult.Fail("No active placement.");
@@ -76,12 +85,16 @@ namespace VForge.Gameplay
             switch (CurrentPlacement.Kind)
             {
                 case PlacementType.Create:
-                    var placeResult = board.TryPlace(CurrentPlacement.Definition, cellPosition, locked: false, out _);
+                    if (_placementPosition == null)
+                        return PlacementOperationResult.Fail("No target cell.");
+                    var placeResult = board.TryPlace(CurrentPlacement.Definition, _placementPosition.Value, locked: false, out _);
                     placementResult = PlacementOperationResult.FromBoard(placeResult);
                     break;
 
                 case PlacementType.Move:
-                    var moveResult = board.TryMove(CurrentPlacement.Piece, cellPosition);
+                    if (_placementPosition == null)
+                        return PlacementOperationResult.Fail("No target cell.");
+                    var moveResult = board.TryMove(CurrentPlacement.Piece, _placementPosition.Value);
                     placementResult = PlacementOperationResult.FromBoard(moveResult);
                     break;
 

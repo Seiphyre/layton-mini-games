@@ -125,7 +125,7 @@ namespace VForge.Gameplay
                 if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Move)
                 {
                     piecePlacementController.BeginRemovePlacement(piecePlacementController.CurrentPlacement.Piece);
-                    piecePlacementController.ConfirmPlacement(Vector2Int.zero);
+                    piecePlacementController.ConfirmPlacement();
                 }
             };
 
@@ -134,7 +134,7 @@ namespace VForge.Gameplay
             var boardDragAdapter = new BoardDropAdapter(piecePlacementController, dragController, pieceBoardView, boardView);
             boardDragAdapter.DragDropped += (payload, cellPosition) =>
             {
-                var placementOpResult = piecePlacementController.CanConfirmPlacement(cellPosition);
+                var placementOpResult = piecePlacementController.ValidatePlacementAt(cellPosition);
                 if (!placementOpResult.Success)
                     return;
 
@@ -148,7 +148,8 @@ namespace VForge.Gameplay
                     inventoryUsageController.ConfirmUsage();
                 }
 
-                piecePlacementController.ConfirmPlacement(cellPosition);
+                piecePlacementController.SetPlacementPosition(cellPosition);
+                piecePlacementController.ConfirmPlacement();
             };
         }
 
