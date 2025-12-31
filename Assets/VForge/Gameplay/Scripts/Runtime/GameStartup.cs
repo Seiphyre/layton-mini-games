@@ -76,7 +76,7 @@ namespace VForge.Gameplay
 
             // Placement
 
-            var piecePlacementController = new BoardPlacementController(pieceBoard);
+            var piecePlacementController = new PlacementController(pieceBoard);
             var inventoryUsageController = new InventoryUsageController(inventory);
 
             // --
@@ -86,17 +86,17 @@ namespace VForge.Gameplay
                 CreateProxy = dragProxyFactory != null,
                 ProxyFactory = dragProxyFactory
             });
-            
-            inventoryDragAdapter.DragStarted += (item) => 
+
+            inventoryDragAdapter.DragStarted += (inventoryItem) =>
             {
-                inventoryUsageController.TryReserve(item); 
-                piecePlacementController.BeginPlacement(item.Data); 
+                inventoryUsageController.BeginUsage(inventoryItem);
+                piecePlacementController.BeginCreatePlacement(inventoryItem.Data);
             };
 
-            inventoryDragAdapter.DragEnded += () => 
-            { 
-                inventoryUsageController.Cancel(); 
-                piecePlacementController.CancelPlacement(); 
+            inventoryDragAdapter.DragEnded += () =>
+            {
+                inventoryUsageController.EndUsage();
+                piecePlacementController.EndPlacement();
             };
 
             // --
@@ -106,26 +106,38 @@ namespace VForge.Gameplay
                 CreateProxy = dragProxyFactory != null,
                 ProxyFactory = dragProxyFactory
             });
-            pieceDragAdapter.DragStarted += (piece) => piecePlacementController.BeginPlacement(piece);
-            pieceDragAdapter.DragEnded += () => piecePlacementController.CancelPlacement();
+
+            pieceDragAdapter.DragStarted += (piece) =>
+            {
+                piecePlacementController.BeginMovePlacement(piece);
+            };
+
+            pieceDragAdapter.DragEnded += () =>
+            {
+                piecePlacementController.EndPlacement();
+            };
 
             // --
 
-            var boardDragAdapter = new BoardDropAdapter(dragController, pieceBoardView, boardView);
-            boardDragAdapter.DropOnCell += (cellPosition) =>
+            var boardDragAdapter = new BoardDropAdapter(piecePlacementController, dragController, pieceBoardView, boardView);
+            boardDragAdapter.DragDropped += (payload, cellPosition) =>
             {
-                var result = piecePlacementController.Place(cellPosition);
-                if (result.Success)
-                {
-                    inventoryUsageController.Commit();
-                }
-                else
-                {
-                    inventoryUsageController.Cancel();
-                }
-            };
+                var placementOpResult = piecePlacementController.CanConfirmPlacement(cellPosition);
+                if (!placementOpResult.Success)
+                    return;
 
-            var boardPlacementPreviewPresenter = new BoardPlacementPresenter(boardDragAdapter, piecePlacementController, dragController, pieceBoardView);
+                // Resolve inventory usage
+                if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Create)
+                {
+                    var inventoryOpresult = inventoryUsageController.CanConfirmUsage();
+                    if (!inventoryOpresult.Success)
+                        return;
+
+                    inventoryUsageController.ConfirmUsage();
+                }
+
+                piecePlacementController.ConfirmPlacement(cellPosition);
+            };          
         }
 
 

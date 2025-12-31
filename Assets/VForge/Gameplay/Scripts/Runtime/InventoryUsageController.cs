@@ -29,10 +29,10 @@ namespace VForge.Gameplay
 
 
         // ----------------------------
-        // Reservation
+        // public API
         // ----------------------------
 
-        public bool TryReserve(InventoryItem<PieceDefinition> item)
+        public bool BeginUsage(InventoryItem<PieceDefinition> item)
         {
             if (item == null)
                 return false;
@@ -44,11 +44,7 @@ namespace VForge.Gameplay
             return true;
         }
 
-        // ----------------------------
-        // Commit / Cancel
-        // ----------------------------
-
-        public void Commit()
+        public void ConfirmUsage()
         {
             if (reservedItem == null)
                 return;
@@ -57,9 +53,17 @@ namespace VForge.Gameplay
             reservedItem = null;
         }
 
-        public void Cancel()
+        public void EndUsage()
         {
             reservedItem = null;
+        }
+
+        public InventoryOperationResult CanConfirmUsage()
+        {
+            if (reservedItem == null)
+                return InventoryOperationResult.Fail("No active item.");
+
+            return inventory.CanRemove(reservedItem);
         }
     }
 }

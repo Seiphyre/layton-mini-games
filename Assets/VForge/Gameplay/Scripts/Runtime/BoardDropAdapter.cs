@@ -7,24 +7,23 @@ using VForge.BoardPieces.Runtime;
 using VForge.BoardPieces.Views;
 using VForge.Boards.Views;
 using VForge.Inventories;
-using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
     public sealed class BoardDropAdapter
     {
         private readonly DragController dragSystem;
-        private readonly DropTarget dropTarget;
         private readonly PieceBoardView pieceBoardView;
         private readonly BoardView boardView;
+        private readonly IPlacementContext placement;
+
+        private readonly DropTarget dropTarget;
+        private readonly BoardDropPayloadResolver payloadResolver = new BoardDropPayloadResolver();
 
         private Vector2Int? dragHoveredCell;
         private bool isDragOnBoard;
 
-        public event Action<Vector2Int> HoverCell;
-        public event Action<Vector2Int> DropOnCell;
-        public event Action EnterBoard;
-        public event Action ExitBoard;
+        public event Action<BoardDropPayloadInfo, Vector2Int> DragDropped;
 
         private bool IsDragOnBoard
         {
@@ -38,12 +37,12 @@ namespace VForge.Gameplay
 
                 if (isDragOnBoard == true)
                 {
-                    EnterBoard?.Invoke();
+                    OnDragEnterBoard();
                 }
 
                 if (isDragOnBoard == false)
                 {
-                    ExitBoard?.Invoke();
+                    OnDragExitBoard();
                 }
             }
         }
@@ -60,20 +59,28 @@ namespace VForge.Gameplay
 
                 if (dragHoveredCell.HasValue)
                 {
-                    HoverCell?.Invoke(dragHoveredCell.Value);
+                    OnDragHoverCell(dragHoveredCell.Value);
                 }
             }
         }
 
 
 
-        // ----------------------------------------------
+        // -----------------------------------------
+        // Constructor
+        // -----------------------------------------
 
-        public BoardDropAdapter(DragController dragSystem, PieceBoardView pieceBoardView, BoardView boardView)
+        public BoardDropAdapter(
+            IPlacementContext placement,
+            DragController dragSystem,
+            PieceBoardView pieceBoardView,
+            BoardView boardView)
         {
-            this.dragSystem = dragSystem;
-            this.pieceBoardView = pieceBoardView;
-            this.boardView = boardView;
+            this.placement = placement ?? throw new ArgumentNullException(nameof(placement));
+            this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem));
+            this.pieceBoardView = pieceBoardView ?? throw new ArgumentNullException(nameof(pieceBoardView));
+            this.boardView = boardView ?? throw new ArgumentNullException(nameof(boardView));
+
 
             // --
 
@@ -83,16 +90,24 @@ namespace VForge.Gameplay
                 return;
 
             dropTarget.ClearRules();
-            dropTarget.AddRule(payload => payload is InventoryItem<PieceDefinition> || payload is Piece);
+            dropTarget.AddRule(payload => payloadResolver.TryResolve(payload, out _));
 
-            dragSystem.DragUpdated += OnDragMoved;
+            dragSystem.DragStarted += OnDragStarted;
+            dragSystem.DragUpdated += OnDragUpdated;
             dragSystem.DragDropped += OnDragDropped;
-            dragSystem.DragEnded += (dragSession) => ClearState();
+            dragSystem.DragEnded += OnDragEnded;
         }
 
-        // ----------------------------------------------
+        // -----------------------------------------
+        // Drag Lifecycle
+        // -----------------------------------------
 
-        private void OnDragMoved(DragSession session)
+        private void OnDragStarted(DragSession _)
+        {
+            CreatePreview();
+        }
+
+        private void OnDragUpdated(DragSession session)
         {
             IsDragOnBoard = boardView.TryScreenPositionToCellPosition(session.ScreenPosition, out var cellPosition);
 
@@ -104,12 +119,106 @@ namespace VForge.Gameplay
 
         private void OnDragDropped(DragSession session)
         {
-            if (!IsRelevantDropTarget(session.HoverTarget) || !IsRelevantPayload(session.Payload))
+            if (!IsRelevantDropTarget(session.HoverTarget))
                 return;
 
-            if (DragHoveredCell.HasValue)
-                DropOnCell?.Invoke(DragHoveredCell.Value);
+            if (!DragHoveredCell.HasValue)
+                return;
+
+            if (!payloadResolver.TryResolve(session.Payload, out BoardDropPayloadInfo boardPayload))
+                return;
+
+            DragDropped?.Invoke(boardPayload, DragHoveredCell.Value);
         }
+
+        private void OnDragEnded(DragSession _)
+        {
+            ClearDragState();
+            DestroyPreview();
+        }
+
+        // --
+
+        private void OnDragExitBoard()
+        {
+            HidePreviewAndShowProxy();
+        }
+
+        private void OnDragEnterBoard()
+        {
+            ShowPreviewAndHideProxy();
+        }
+
+        private void OnDragHoverCell(Vector2Int cellPosition)
+        {
+            MovePreviewAndSetValidity(cellPosition);
+        }
+
+
+
+        // -----------------------------------------
+        // Preview Lifecycle
+        // -----------------------------------------
+
+        private void CreatePreview()
+        {
+            var activeDefinition = placement.CurrentPlacement.Kind switch
+            {
+                PlacementType.Create => placement.CurrentPlacement.Definition,
+                PlacementType.Move => placement.CurrentPlacement.Piece.Definition,
+                PlacementType.None => null,
+
+                _ => throw new InvalidOperationException("Invalid placement kind. Enable to create preview.")
+            };
+
+            // Create Preview
+            if (activeDefinition != null)
+            {
+                pieceBoardView.CreatePreview(activeDefinition);
+                pieceBoardView.HidePreview();
+            }
+        }
+
+        private void MovePreviewAndSetValidity(Vector2Int cellPosition)
+        {
+            // Move Preview
+            pieceBoardView.SetPreviewPosition(cellPosition);
+
+            // Set Preview Validity
+            pieceBoardView.SetPreviewValidity(placement.ValidatePlacementAt(cellPosition).Success);
+        }
+
+        private void DestroyPreview()
+        {
+            // Destroy Preview
+            pieceBoardView.DestroyPreview();
+        }
+
+        private void ShowPreviewAndHideProxy()
+        {
+            // Hide Proxy
+            if (dragSystem.Current != null && dragSystem.Current.HasProxy)
+                dragSystem.Current.Proxy.Hide();
+
+            // Show Preview
+            pieceBoardView.ShowPreview();
+        }
+
+        private void HidePreviewAndShowProxy()
+        {
+            // Show Proxy
+            if (dragSystem.Current != null && dragSystem.Current.HasProxy)
+                dragSystem.Current.Proxy.Show();
+
+            // Hide Preview
+            pieceBoardView.HidePreview();
+        }
+
+
+
+        // -----------------------------------------
+        // Internal Helpers
+        // -----------------------------------------
 
         private bool IsRelevantPayload(object payload)
         {
@@ -121,7 +230,7 @@ namespace VForge.Gameplay
             return this.dropTarget == dropTarget;
         }
 
-        private void ClearState()
+        private void ClearDragState()
         {
             IsDragOnBoard = false;
             DragHoveredCell = null;
