@@ -53,6 +53,18 @@ namespace VForge.BoardPieces.Runtime
             return PieceBoardOperationResult.Ok();
         }
 
+        public PieceBoardOperationResult CanMove(Piece piece, Vector2Int cellPosition)
+        {
+            if (piece.IsLocked)
+                return PieceBoardOperationResult.Fail("Piece is locked.");
+
+            var res = validator.Validate(piece.Definition, cellPosition, piece);
+            if (!res.IsValid)
+                return PieceBoardOperationResult.Fail(res.Reason);
+
+            return PieceBoardOperationResult.Ok();
+        }
+
         public PieceBoardOperationResult TryMove(Piece piece, Vector2Int cellPosition)
         {
             if (piece.IsLocked)
@@ -64,6 +76,14 @@ namespace VForge.BoardPieces.Runtime
 
             piece.CellPosition = cellPosition;
             OnPieceMoved?.Invoke(piece);
+
+            return PieceBoardOperationResult.Ok();
+        }
+
+        public PieceBoardOperationResult CanRemove(Piece piece)
+        {
+            if (piece.IsLocked)
+                return PieceBoardOperationResult.Fail("Piece is locked.");
 
             return PieceBoardOperationResult.Ok();
         }

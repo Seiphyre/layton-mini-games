@@ -117,6 +117,18 @@ namespace VForge.Gameplay
                 piecePlacementController.EndPlacement();
             };
 
+            pieceDragAdapter.DragCancelled += (reason) =>
+            {
+                if (reason != DragCancelReason.ReleasedNoTarget)
+                    return;
+
+                if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Move)
+                {
+                    piecePlacementController.BeginRemovePlacement(piecePlacementController.CurrentPlacement.Piece);
+                    piecePlacementController.ConfirmPlacement(Vector2Int.zero);
+                }
+            };
+
             // --
 
             var boardDragAdapter = new BoardDropAdapter(piecePlacementController, dragController, pieceBoardView, boardView);
@@ -137,7 +149,7 @@ namespace VForge.Gameplay
                 }
 
                 piecePlacementController.ConfirmPlacement(cellPosition);
-            };          
+            };
         }
 
 

@@ -12,6 +12,7 @@ namespace VForge.Gameplay
     {
         public event Action<Piece> DragStarted;
         public event Action DragEnded;
+        public event Action<DragCancelReason> DragCancelled;
 
         private readonly DragController dragSystem;
         private readonly PieceBoardView pieceBoardView;
@@ -37,6 +38,7 @@ namespace VForge.Gameplay
 
             dragSystem.DragStarted += OnDragStarted;
             dragSystem.DragEnded += OnDragEnded;
+            dragSystem.DragCancelled += OnDragCancelled;
         }
 
         private void OnPieceViewCreated(PieceView view)
@@ -76,6 +78,10 @@ namespace VForge.Gameplay
             DragEnded?.Invoke();
         }
 
+        private void OnDragCancelled(DragSession session, DragCancelReason reason)
+        {
+            DragCancelled?.Invoke(reason);
+        }
     }
 
 }

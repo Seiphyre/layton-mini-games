@@ -30,5 +30,8 @@ namespace VForge.Gameplay
 
         public static PlacementInfo Move(Piece piece)
             => new(PlacementType.Move, null, piece);
+
+        public static PlacementInfo Remove(Piece piece)
+            => new(PlacementType.Remove, null, piece);
     }
 }

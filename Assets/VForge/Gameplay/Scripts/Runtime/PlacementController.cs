@@ -56,6 +56,11 @@ namespace VForge.Gameplay
             CurrentPlacement = PlacementInfo.Move(piece);
         }
 
+        public void BeginRemovePlacement(Piece piece)
+        {
+            CurrentPlacement = PlacementInfo.Remove(piece);
+        }
+
         public void EndPlacement()
         {
             CurrentPlacement = PlacementInfo.None();
@@ -78,6 +83,12 @@ namespace VForge.Gameplay
                 case PlacementType.Move:
                     var moveResult = board.TryMove(CurrentPlacement.Piece, cellPosition);
                     placementResult = PlacementOperationResult.FromBoard(moveResult);
+                    break;
+
+
+                case PlacementType.Remove:
+                    var removeResult = board.TryRemove(CurrentPlacement.Piece);
+                    placementResult = PlacementOperationResult.FromBoard(removeResult);
                     break;
 
                 default:
@@ -112,8 +123,12 @@ namespace VForge.Gameplay
                     return PlacementOperationResult.FromBoard(placeResult);
 
                 case PlacementType.Move:
-                    var moveResult = board.CanPlace(CurrentPlacement.Piece.Definition, cellPosition);
+                    var moveResult = board.CanMove(CurrentPlacement.Piece, cellPosition);
                     return PlacementOperationResult.FromBoard(moveResult);
+
+                case PlacementType.Remove:
+                    var removeResult = board.CanRemove(CurrentPlacement.Piece);
+                    return PlacementOperationResult.FromBoard(removeResult);
 
                 default:
                     return PlacementOperationResult.Fail("Invalid placement intent.");

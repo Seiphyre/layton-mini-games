@@ -2,5 +2,6 @@ public enum PlacementType
 {
     None,
     Create,
-    Move
+    Move,
+    Remove
 }
