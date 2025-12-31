@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VForge.BoardPieces.Definitions;
 using VForge.BoardPieces.Runtime;
@@ -16,7 +18,13 @@ namespace VForge.BoardPieces.Views
         private PieceView previewView;
         private readonly Dictionary<int, PieceView> pieceViews = new();
 
+        public event Action<PieceView> OnPieceViewCreated;
+        public event Action<PieceView> OnPieceViewDestroyed;
+
         public PieceBoard PieceBoard { get { return board; } }
+        public IReadOnlyList<PieceView> PieceViews => pieceViews.Values.ToList();
+
+
 
         public void Initialize(PieceBoard board, IBoardViewContext viewContext)
         {
@@ -94,12 +102,16 @@ namespace VForge.BoardPieces.Views
             v.SetLocalPosition(viewContext.CellPositionToLocalPosition(piece.CellPosition));
 
             pieceViews[piece.Id] = v;
+
+            OnPieceViewCreated?.Invoke(v);
         }
 
         private void DestroyPieceView(Piece piece)
         {
             if (pieceViews.TryGetValue(piece.Id, out var pieceView))
             {
+                OnPieceViewDestroyed?.Invoke(pieceView);
+
                 Destroy(pieceView.gameObject);
                 pieceViews.Remove(piece.Id);
             }

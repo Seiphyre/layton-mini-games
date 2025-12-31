@@ -76,20 +76,56 @@ namespace VForge.Gameplay
 
             // Placement
 
-            var placePieceController = new PiecePlacementController(pieceBoardView, boardView, pieceInventoryView);
+            var piecePlacementController = new BoardPlacementController(pieceBoard);
+            var inventoryUsageController = new InventoryUsageController(inventory);
+
+            // --
 
             var inventoryDragAdapter = new InventoryDragAdapter(dragController, pieceInventoryView, new InventoryDragOptions()
             {
-                createProxy = dragProxyFactory != null,
+                CreateProxy = dragProxyFactory != null,
                 ProxyFactory = dragProxyFactory
             });
-            inventoryDragAdapter.DragStarted += placePieceController.BeginPlacement;
-            inventoryDragAdapter.DragEnded += placePieceController.CancelPlacement;
+            
+            inventoryDragAdapter.DragStarted += (item) => 
+            {
+                inventoryUsageController.TryReserve(item); 
+                piecePlacementController.BeginPlacement(item.Data); 
+            };
 
-            var boardDragAdapter = new BoardDragAdapter(dragController, pieceBoardView, boardView);
-            boardDragAdapter.DropOnCell += placePieceController.TryPlace;
+            inventoryDragAdapter.DragEnded += () => 
+            { 
+                inventoryUsageController.Cancel(); 
+                piecePlacementController.CancelPlacement(); 
+            };
 
-            var boardPlacementPreviewPresenter = new BoardPlacementPreviewPresenter(boardDragAdapter, placePieceController, dragController, pieceBoardView);
+            // --
+
+            var pieceDragAdapter = new PieceDragAdapter(dragController, pieceBoardView, new PieceDragOptions()
+            {
+                CreateProxy = dragProxyFactory != null,
+                ProxyFactory = dragProxyFactory
+            });
+            pieceDragAdapter.DragStarted += (piece) => piecePlacementController.BeginPlacement(piece);
+            pieceDragAdapter.DragEnded += () => piecePlacementController.CancelPlacement();
+
+            // --
+
+            var boardDragAdapter = new BoardDropAdapter(dragController, pieceBoardView, boardView);
+            boardDragAdapter.DropOnCell += (cellPosition) =>
+            {
+                var result = piecePlacementController.Place(cellPosition);
+                if (result.Success)
+                {
+                    inventoryUsageController.Commit();
+                }
+                else
+                {
+                    inventoryUsageController.Cancel();
+                }
+            };
+
+            var boardPlacementPreviewPresenter = new BoardPlacementPresenter(boardDragAdapter, piecePlacementController, dragController, pieceBoardView);
         }
 
 

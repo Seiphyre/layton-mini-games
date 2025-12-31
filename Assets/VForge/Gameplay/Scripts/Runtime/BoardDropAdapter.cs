@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VForge.BoardPieces.Definitions;
+using VForge.BoardPieces.Runtime;
 using VForge.BoardPieces.Views;
 using VForge.Boards.Views;
+using VForge.Inventories;
 using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
-    public sealed class BoardDragAdapter
+    public sealed class BoardDropAdapter
     {
         private readonly DragController dragSystem;
         private readonly DropTarget dropTarget;
@@ -67,33 +69,31 @@ namespace VForge.Gameplay
 
         // ----------------------------------------------
 
-        public BoardDragAdapter(DragController dragSystem, PieceBoardView pieceBoardView, BoardView boardView)
+        public BoardDropAdapter(DragController dragSystem, PieceBoardView pieceBoardView, BoardView boardView)
         {
             this.dragSystem = dragSystem;
             this.pieceBoardView = pieceBoardView;
             this.boardView = boardView;
+
+            // --
 
             this.dropTarget = boardView.GetComponent<DropTarget>();
 
             if (dropTarget == null)
                 return;
 
-            // --
-
             dropTarget.ClearRules();
-            dropTarget.AddRule(payload => payload is PieceInventoryItemView);
+            dropTarget.AddRule(payload => payload is InventoryItem<PieceDefinition> || payload is Piece);
 
-            dragSystem.DragMoved += OnDragMoved;
+            dragSystem.DragUpdated += OnDragMoved;
             dragSystem.DragDropped += OnDragDropped;
+            dragSystem.DragEnded += (dragSession) => ClearState();
         }
-
-
 
         // ----------------------------------------------
 
         private void OnDragMoved(DragSession session)
         {
-
             IsDragOnBoard = boardView.TryScreenPositionToCellPosition(session.ScreenPosition, out var cellPosition);
 
             if (!IsRelevantDropTarget(session.HoverTarget) || !IsRelevantPayload(session.Payload))
@@ -111,14 +111,20 @@ namespace VForge.Gameplay
                 DropOnCell?.Invoke(DragHoveredCell.Value);
         }
 
-        bool IsRelevantPayload(object payload)
+        private bool IsRelevantPayload(object payload)
         {
             return dropTarget.CanAccept(payload);
         }
 
-        bool IsRelevantDropTarget(DropTarget dropTarget)
+        private bool IsRelevantDropTarget(DropTarget dropTarget)
         {
             return this.dropTarget == dropTarget;
+        }
+
+        private void ClearState()
+        {
+            IsDragOnBoard = false;
+            DragHoveredCell = null;
         }
     }
 

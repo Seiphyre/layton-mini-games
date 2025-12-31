@@ -13990,7 +13990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragController: {fileID: 100650610}
-  dragProxyFactory: {fileID: 11400000, guid: 899100dc83e7bad41b15bd159be6fffe, type: 2}
+  dragProxyFactory: {fileID: 11400000, guid: 785f41ac4e1f4194eb6a2f7b362ecbc1, type: 2}
   boardView: {fileID: 2142432845}
   pieceBoardViewPrefab: {fileID: 4644951857108012364, guid: c6476983ab2f4604dbeacfd662536359, type: 3}
   boardData: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}

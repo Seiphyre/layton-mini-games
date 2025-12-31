@@ -6,10 +6,10 @@ using VForge.BoardPieces.Views;
 using VForge.Boards.Views;
 using VForge.Gameplay;
 
-public sealed class BoardPlacementPreviewPresenter
+public sealed class BoardPlacementPresenter
 {
-    private readonly BoardDragAdapter boardAdapter;
-    private readonly PiecePlacementController placement;
+    private readonly BoardDropAdapter boardAdapter;
+    private readonly IBoardPlacementContext placement;
     private readonly PieceBoardView pieceBoardView;
     private readonly DragController dragController;
 
@@ -19,9 +19,9 @@ public sealed class BoardPlacementPreviewPresenter
     // Constructor
     // -----------------------------------------------------------------
 
-    public BoardPlacementPreviewPresenter(
-        BoardDragAdapter boardAdapter,
-        PiecePlacementController placement,
+    public BoardPlacementPresenter(
+        BoardDropAdapter boardAdapter,
+        IBoardPlacementContext placement,
         DragController dragController,
         PieceBoardView boardView)
     {
@@ -46,25 +46,28 @@ public sealed class BoardPlacementPreviewPresenter
 
     private void CreatePreview()
     {
-        // Create Preview
-        if (!placement.HasActivePlacement)
-            return;
+        var activeDefinition = placement.Intent switch
+        {
+            BoardPlacementIntent.PlaceNew => placement.ActiveDefinition,
+            BoardPlacementIntent.MoveExisting => placement.ActivePiece.Definition,
+            _ => null,
+        };
 
-        pieceBoardView.CreatePreview(placement.ActiveDefinition);
-        pieceBoardView.HidePreview();
+        // Create Preview
+        if (activeDefinition != null)
+        {
+            pieceBoardView.CreatePreview(activeDefinition);
+            pieceBoardView.HidePreview();
+        }
     }
 
     private void MovePreviewAndSetValidity(Vector2Int cellPosition)
     {
-        if (!placement.HasActivePlacement)
-            return;
-
         // Move Preview
         pieceBoardView.SetPreviewPosition(cellPosition);
 
         // Set Preview Validity
-        var result = pieceBoardView.PieceBoard.CanPlace(placement.ActiveDefinition, cellPosition);
-        pieceBoardView.SetPreviewValidity(result.Success);
+        pieceBoardView.SetPreviewValidity(placement.CanPlace(cellPosition).Success);
     }
 
     private void DestroyPreview()

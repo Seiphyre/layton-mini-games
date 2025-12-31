@@ -13,13 +13,13 @@ namespace VForge.Inventories.UI
     {
         public Inventory<T> Inventory { get; private set; }
 
-        protected readonly List<InventoryItemViewBase> _activeViews = new();
-        protected readonly Stack<InventoryItemViewBase> _pooledViews = new();
+        protected readonly List<InventoryItemView<T>> _activeViews = new();
+        protected readonly Stack<InventoryItemView<T>> _pooledViews = new();
 
-        public event Action<InventoryItemViewBase> OnItemViewCreated;
-        public event Action<InventoryItemViewBase> OnItemViewDestroyed;
+        public event Action<InventoryItemView<T>> OnItemViewCreated;
+        public event Action<InventoryItemView<T>> OnItemViewDestroyed;
 
-        public IReadOnlyList<InventoryItemViewBase> ItemViews => _activeViews;
+        public IReadOnlyList<InventoryItemView<T>> ItemViews => _activeViews;
 
 
 
@@ -70,9 +70,9 @@ namespace VForge.Inventories.UI
         // Pooling
         // --------------------------------------------------
 
-        protected InventoryItemViewBase AcquireItemView(InventoryItem<T> item)
+        protected InventoryItemView<T> AcquireItemView(InventoryItem<T> item)
         {
-            InventoryItemViewBase view;
+            InventoryItemView<T> view;
 
             if (_pooledViews.Count > 0)
             {
@@ -89,7 +89,7 @@ namespace VForge.Inventories.UI
             return view;
         }
 
-        protected void ReleaseItemView(InventoryItemViewBase view)
+        protected void ReleaseItemView(InventoryItemView<T> view)
         {
             if (view == null)
                 return;
@@ -100,7 +100,7 @@ namespace VForge.Inventories.UI
             _pooledViews.Push(view);
         }
 
-        protected abstract InventoryItemViewBase CreateItemView();
+        protected abstract InventoryItemView<T> CreateItemView();
 
 
 

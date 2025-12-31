@@ -3,32 +3,34 @@ using UnityEngine;
 using VForge.BoardPieces.Definitions;
 using VForge.Inventories.UI;
 using VForge.Inventories;
+using VForge.BoardPieces.Views;
+using VForge.BoardPieces.Runtime;
 
 namespace VForge.Gameplay
 {
-    public sealed class InventoryDragAdapter
+    public sealed class PieceDragAdapter
     {
-        public event Action<InventoryItem<PieceDefinition>> DragStarted;
+        public event Action<Piece> DragStarted;
         public event Action DragEnded;
 
         private readonly DragController dragSystem;
-        private readonly PieceInventoryView inventoryView;
-        private readonly InventoryDragOptions options;
+        private readonly PieceBoardView pieceBoardView;
+        private readonly PieceDragOptions options;
 
-        public InventoryDragAdapter(DragController dragSystem, PieceInventoryView inventoryView, InventoryDragOptions options = null)
+        public PieceDragAdapter(DragController dragSystem, PieceBoardView pieceBoardView, PieceDragOptions options = null)
         {
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem)); ;
-            this.inventoryView = inventoryView ?? throw new ArgumentNullException(nameof(inventoryView)); ;
+            this.pieceBoardView = pieceBoardView ?? throw new ArgumentNullException(nameof(pieceBoardView)); ;
             this.options = options ?? throw new ArgumentNullException(nameof(options)); ;
 
-             // --
+            // --
 
-            inventoryView.OnItemViewCreated += OnItemViewCreated;
-            inventoryView.OnItemViewDestroyed += OnItemViewDestroyed;
+            pieceBoardView.OnPieceViewCreated += OnPieceViewCreated;
+            pieceBoardView.OnPieceViewDestroyed += OnPieceViewDestroyed;
 
-            foreach ( var itemView in inventoryView.ItemViews)
+            foreach (var itemView in pieceBoardView.PieceViews)
             {
-                OnItemViewCreated(itemView);
+                OnPieceViewCreated(itemView);
             }
 
             // --
@@ -37,20 +39,20 @@ namespace VForge.Gameplay
             dragSystem.DragEnded += OnDragEnded;
         }
 
-        private void OnItemViewCreated(InventoryItemView<PieceDefinition> view)
+        private void OnPieceViewCreated(PieceView view)
         {
             var dragSource = ComponentUtils.GetOrAddComponent<DragSource>(view.gameObject);
 
             if (dragSource != null)
             {
                 dragSource.Initialize(dragSystem);
-                dragSource.Payload = view.TypedItem;
+                dragSource.Payload = view.Piece;
                 dragSource.CreateProxy = options.CreateProxy;
                 dragSource.ProxyFactory = options.ProxyFactory;
             }
         }
 
-        private void OnItemViewDestroyed(InventoryItemView<PieceDefinition> view)
+        private void OnPieceViewDestroyed(PieceView view)
         {
             var ds = view.GetComponent<DragSource>();
 
@@ -60,15 +62,15 @@ namespace VForge.Gameplay
 
         private void OnDragStarted(DragSession session)
         {
-            if (session.Payload != null && session.Payload is InventoryItem<PieceDefinition> inventoryItem)
+            if (session.Payload != null && session.Payload is Piece piece)
             {
-                DragStarted?.Invoke(inventoryItem);
+                DragStarted?.Invoke(piece);
             }
         }
 
         private void OnDragEnded(DragSession session)
         {
-            if (session.Payload != null && session.Payload is InventoryItem<PieceDefinition> inventoryItem)
+            if (session.Payload != null && session.Payload is InventoryItemView<PieceDefinition> inventoryItemView)
             {
                 DragEnded?.Invoke();
             }

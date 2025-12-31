@@ -52,7 +52,7 @@ public sealed class CloneProxyFactory : DragProxyFactory
         // 3. Set Visual
         ApplyVisualTweaks(proxyGO);
 
-        return new CloneProxy(proxyGO);
+        return new DefaultProxy(proxyGO);
     }
 
 

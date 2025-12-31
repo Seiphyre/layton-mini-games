@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CloneProxy : IDragProxy
+public class DefaultProxy : IDragProxy
 {
     public GameObject GameObject { get; }
     //public float Alpha { get; set; } = 1.0f;
@@ -13,7 +13,7 @@ public class CloneProxy : IDragProxy
     // Constructor
     // -----------------------------------------------
 
-    public CloneProxy(GameObject go)
+    public DefaultProxy(GameObject go)
     {
         GameObject = go;
     }

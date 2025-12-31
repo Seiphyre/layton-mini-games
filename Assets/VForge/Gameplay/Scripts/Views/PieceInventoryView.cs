@@ -20,7 +20,7 @@ namespace VForge.Gameplay
 
 
 
-        protected override InventoryItemViewBase CreateItemView()
+        protected override InventoryItemView<PieceDefinition> CreateItemView()
         {
             var view = Instantiate(_itemViewPrefab);
 

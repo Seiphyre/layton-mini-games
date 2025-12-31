@@ -63,7 +63,7 @@ public sealed class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler
         if (Payload == null)
             Payload = this;
 
-        dragSystem.TryBeginDrag(Payload, createProxy ? proxyFactory : null);
+        dragSystem.TryBeginDrag(this, Payload, createProxy ? proxyFactory : null);
     }
 
     public void OnDrag(PointerEventData eventData)

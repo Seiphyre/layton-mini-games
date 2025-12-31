@@ -15,7 +15,7 @@ public class DragController : MonoBehaviour
     public DragSession Current => _session;
 
     public event Action<DragSession> DragStarted;
-    public event Action<DragSession> DragMoved;
+    public event Action<DragSession> DragUpdated;
     public event Action<DragSession> DragDropped;
     public event Action<DragSession, DragCancelReason> DragCancelled;
     public event Action<DragSession> DragEnded;
@@ -35,11 +35,11 @@ public class DragController : MonoBehaviour
     // Public API
     // --------------------
 
-    public bool TryBeginDrag(object payload, IDragProxyFactory proxyFactory = null)
+    public bool TryBeginDrag(DragSource source, object payload, IDragProxyFactory proxyFactory = null)
     {
         if (_session != null) return false;
 
-        _session = new DragSession(payload);
+        _session = new DragSession(source, payload);
         _proxyFactory = proxyFactory;
 
         _session.ScreenPosition = Input.mousePosition;
@@ -74,7 +74,7 @@ public class DragController : MonoBehaviour
         _session.ScreenPosition = Input.mousePosition;
 
         _session.Proxy?.SetScreenPosition(_session.ScreenPosition);
-        DragMoved?.Invoke(_session);
+        DragUpdated?.Invoke(_session);
 
         // hover target (optional, for feedback)
         _session.HoverTarget = RaycastDropTarget(_session.ScreenPosition);
