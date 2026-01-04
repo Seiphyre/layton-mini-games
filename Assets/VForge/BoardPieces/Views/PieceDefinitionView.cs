@@ -20,12 +20,6 @@ namespace VForge.BoardPieces.Views
 
         public void Initialize(PieceDefinition definition, float blockSize)
         {
-            if (this.definition != null)
-            {
-                //Debug.LogWarning("PieceView already initialized.");
-                return;
-            }
-
             this.definition = definition;
             this.blockSize = blockSize;
 
