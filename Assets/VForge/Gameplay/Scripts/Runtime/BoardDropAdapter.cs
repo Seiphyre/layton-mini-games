@@ -102,16 +102,21 @@ namespace VForge.Gameplay
         // Drag Lifecycle
         // -----------------------------------------
 
-        private void OnDragStarted(DragSession _)
+        private void OnDragStarted(DragSession session)
         {
             CreatePreview();
+
+            OnDragUpdated(session);
         }
 
         private void OnDragUpdated(DragSession session)
         {
+            if (!IsRelevantDropTarget(session.HoverTarget))
+                return;
+
             IsDragOnBoard = boardView.TryScreenPositionToCellPosition(session.ScreenPosition, out var cellPosition);
 
-            if (!IsRelevantDropTarget(session.HoverTarget) || !IsRelevantPayload(session.Payload))
+            if (!IsRelevantPayload(session.Payload))
                 return;
 
             DragHoveredCell = IsDragOnBoard ? cellPosition : null;
@@ -141,16 +146,19 @@ namespace VForge.Gameplay
 
         private void OnDragExitBoard()
         {
+            Debug.Log("Exit");
             HidePreviewAndShowProxy();
         }
 
         private void OnDragEnterBoard()
         {
+            Debug.Log("Enter");
             ShowPreviewAndHideProxy();
         }
 
         private void OnDragHoverCell(Vector2Int cellPosition)
         {
+            Debug.Log("Hover");
             MovePreviewAndSetValidity(cellPosition);
         }
 

@@ -50,6 +50,8 @@ public class DragController : MonoBehaviour
             _session.Proxy?.SetScreenPosition(_session.ScreenPosition);
         }
 
+        _session.HoverTarget = RaycastDropTarget(_session.ScreenPosition);
+
         DragStarted?.Invoke(_session);
         return true;
     }
