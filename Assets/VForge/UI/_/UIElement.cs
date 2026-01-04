@@ -84,8 +84,8 @@ public class UIElement : MonoBehaviour
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
             canvasGroup.alpha = 1;
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.interactable = false;
+            //canvasGroup.blocksRaycasts = false;
+            //canvasGroup.interactable = false;
         }
 
         canvasGroup.alpha = opacity;

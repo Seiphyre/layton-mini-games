@@ -5,6 +5,7 @@ using VForge.Inventories.UI;
 using VForge.Inventories;
 using VForge.BoardPieces.Views;
 using VForge.BoardPieces.Runtime;
+using System.Collections.Generic;
 
 namespace VForge.Gameplay
 {
@@ -18,7 +19,7 @@ namespace VForge.Gameplay
         private readonly PieceBoardView pieceBoardView;
         private readonly PieceDragOptions options;
 
-        private bool isDragging = false;
+        private readonly HashSet<DragSource> _ownedSources = new();
 
         public PieceDragAdapter(DragController dragSystem, PieceBoardView pieceBoardView, PieceDragOptions options = null)
         {
@@ -56,39 +57,57 @@ namespace VForge.Gameplay
                 dragSource.Payload = view.Piece;
                 dragSource.CreateProxy = options.CreateProxy;
                 dragSource.ProxyFactory = options.ProxyFactory;
+
+                _ownedSources.Add(dragSource);
             }
         }
 
         private void OnPieceViewDestroyed(PieceView view)
         {
-            var ds = view.GetComponent<DragSource>();
+            var dragSource = view.GetComponent<DragSource>();
 
-            if (ds != null)
-                ds.Payload = null;
+            if (dragSource != null)
+            {
+                dragSource.Payload = null;
+
+                _ownedSources.Remove(dragSource);
+            }
         }
 
         private void OnDragStarted(DragSession session)
         {
-            if (session.Payload != null && session.Payload is Piece piece)
-            {
-                isDragging = true;
-                DragStarted?.Invoke(piece);
-            }
+            if (!_ownedSources.Contains(session.Source))
+                return;
+
+            if (session.Payload == null || !(session.Payload is Piece piece))
+                return;
+
+            // --
+
+            session.Source.gameObject.SetActive(false);
+
+            // --
+
+            DragStarted?.Invoke(piece);
         }
 
         private void OnDragEnded(DragSession session)
         {
-            if (!isDragging)
+            if (!_ownedSources.Contains(session.Source))
                 return;
 
-            DragEnded?.Invoke();
+            // --
 
-            isDragging = false;
+            session.Source.gameObject.SetActive(true);
+
+            // --
+
+            DragEnded?.Invoke();
         }
 
         private void OnDragCancelled(DragSession session, DragCancelReason reason)
         {
-            if (!isDragging)
+            if (!_ownedSources.Contains(session.Source))
                 return;
 
             DragCancelled?.Invoke(reason);

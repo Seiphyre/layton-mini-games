@@ -33,6 +33,8 @@ namespace VForge.Gameplay
 
         private void Start()
         {
+            Debug.Log("Todo: Transparency on dragged items, Real DragProxyView/inventoryItemView, New shapes + Level design, Validation + Submit button ");
+
             // 1. Build runtime board and link it to view
             var board = new Board(boardData);
 
