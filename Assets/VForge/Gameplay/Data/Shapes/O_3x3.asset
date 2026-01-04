@@ -10,9 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6933105b41b84354aa8a5615bb1363e8, type: 3}
-  m_Name: 1x2_Bar
+  m_Name: O_3x3
   m_EditorClassIdentifier: 
   Cells:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
-  MaxShapeSize: 5
+  - {x: 0, y: 2}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 1, y: 2}
+  - {x: 2, y: 0}
+  - {x: 2, y: 1}
+  - {x: 2, y: 2}

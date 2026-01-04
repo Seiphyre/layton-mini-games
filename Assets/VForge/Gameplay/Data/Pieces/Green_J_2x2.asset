@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
+  m_Name: Green_J_2x2
+  m_EditorClassIdentifier: 
+  Id: Green_J_2x2
+  Shape: {fileID: 11400000, guid: 6aeaee1328c89c544a693638c509fe25, type: 2}
+  Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}

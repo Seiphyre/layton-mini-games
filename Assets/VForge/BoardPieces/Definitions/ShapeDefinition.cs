@@ -7,6 +7,6 @@ namespace VForge.BoardPieces.Definitions
     public class ShapeDefinition : ScriptableObject
     {
         public List<Vector2Int> Cells = new();
-        public int MaxShapeSize = 5;
+        public static int MaxShapeSize = 5;
     }
 }

@@ -12,9 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f70b9c35b089094ba09cd55531a2d09, type: 3}
   m_Name: Board_Level_1
   m_EditorClassIdentifier: 
-  Width: 6
-  Height: 6
+  Width: 4
+  Height: 7
   Tiles:
+  - X: 0
+    Y: 0
+  - X: 0
+    Y: 1
+  - X: 0
+    Y: 2
+  - X: 0
+    Y: 3
+  - X: 0
+    Y: 4
+  - X: 0
+    Y: 5
+  - X: 0
+    Y: 6
+  - X: 1
+    Y: 0
   - X: 1
     Y: 1
   - X: 1
@@ -23,6 +39,12 @@ MonoBehaviour:
     Y: 3
   - X: 1
     Y: 4
+  - X: 1
+    Y: 5
+  - X: 1
+    Y: 6
+  - X: 2
+    Y: 0
   - X: 2
     Y: 1
   - X: 2
@@ -31,6 +53,12 @@ MonoBehaviour:
     Y: 3
   - X: 2
     Y: 4
+  - X: 2
+    Y: 5
+  - X: 2
+    Y: 6
+  - X: 3
+    Y: 0
   - X: 3
     Y: 1
   - X: 3
@@ -39,88 +67,104 @@ MonoBehaviour:
     Y: 3
   - X: 3
     Y: 4
-  - X: 4
-    Y: 1
-  - X: 4
-    Y: 2
-  - X: 4
-    Y: 3
-  - X: 4
-    Y: 4
+  - X: 3
+    Y: 5
+  - X: 3
+    Y: 6
   Walls:
-  - X: 1
-    Y: 1
+  - X: 0
+    Y: 0
+    Axis: 0
+  - X: 0
+    Y: 3
+    Axis: 0
+  - X: 0
+    Y: 5
+    Axis: 0
+  - X: 0
+    Y: 7
     Axis: 0
   - X: 1
+    Y: 0
+    Axis: 0
+  - X: 1
+    Y: 3
+    Axis: 0
+  - X: 1
+    Y: 5
+    Axis: 0
+  - X: 1
+    Y: 7
+    Axis: 0
+  - X: 2
+    Y: 0
+    Axis: 0
+  - X: 2
+    Y: 3
+    Axis: 0
+  - X: 2
     Y: 5
     Axis: 0
   - X: 2
-    Y: 1
+    Y: 7
     Axis: 0
+  - X: 3
+    Y: 0
+    Axis: 0
+  - X: 3
+    Y: 3
+    Axis: 0
+  - X: 3
+    Y: 5
+    Axis: 0
+  - X: 3
+    Y: 7
+    Axis: 0
+  - X: 0
+    Y: 0
+    Axis: 1
+  - X: 0
+    Y: 1
+    Axis: 1
+  - X: 0
+    Y: 2
+    Axis: 1
+  - X: 0
+    Y: 3
+    Axis: 1
+  - X: 0
+    Y: 4
+    Axis: 1
+  - X: 0
+    Y: 5
+    Axis: 1
+  - X: 0
+    Y: 6
+    Axis: 1
   - X: 2
+    Y: 3
+    Axis: 1
+  - X: 2
+    Y: 4
+    Axis: 1
+  - X: 4
+    Y: 0
+    Axis: 1
+  - X: 4
+    Y: 1
+    Axis: 1
+  - X: 4
+    Y: 2
+    Axis: 1
+  - X: 4
+    Y: 3
+    Axis: 1
+  - X: 4
+    Y: 4
+    Axis: 1
+  - X: 4
     Y: 5
-    Axis: 0
-  - X: 3
-    Y: 1
-    Axis: 0
-  - X: 3
-    Y: 2
-    Axis: 0
-  - X: 3
-    Y: 4
-    Axis: 0
-  - X: 3
-    Y: 5
-    Axis: 0
-  - X: 4
-    Y: 1
-    Axis: 0
-  - X: 4
-    Y: 3
-    Axis: 0
-  - X: 4
-    Y: 5
-    Axis: 0
-  - X: 1
-    Y: 1
-    Axis: 1
-  - X: 1
-    Y: 2
-    Axis: 1
-  - X: 1
-    Y: 3
-    Axis: 1
-  - X: 1
-    Y: 4
-    Axis: 1
-  - X: 3
-    Y: 1
-    Axis: 1
-  - X: 3
-    Y: 2
-    Axis: 1
-  - X: 3
-    Y: 3
-    Axis: 1
-  - X: 3
-    Y: 4
     Axis: 1
   - X: 4
-    Y: 2
+    Y: 6
     Axis: 1
-  - X: 4
-    Y: 3
-    Axis: 1
-  - X: 5
-    Y: 1
-    Axis: 1
-  - X: 5
-    Y: 2
-    Axis: 1
-  - X: 5
-    Y: 3
-    Axis: 1
-  - X: 5
-    Y: 4
-    Axis: 1
-  Pieces: []

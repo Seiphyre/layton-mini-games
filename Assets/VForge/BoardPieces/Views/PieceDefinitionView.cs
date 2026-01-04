@@ -22,7 +22,7 @@ namespace VForge.BoardPieces.Views
         {
             if (this.definition != null)
             {
-                Debug.LogWarning("PieceView already initialized.");
+                //Debug.LogWarning("PieceView already initialized.");
                 return;
             }
 

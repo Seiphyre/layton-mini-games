@@ -14,17 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Pieces:
   - Id: 1
-    Definition: {fileID: 11400000, guid: e173366b871d06a4b8f106d568c05a12, type: 2}
+    Definition: {fileID: 11400000, guid: 0c07e49e342430747ab8f3b650dfb360, type: 2}
     Locked: 1
     HasStartingPosition: 1
-    StartingPosition: {x: 2, y: 2}
+    StartingPosition: {x: 0, y: 3}
+  - Id: 2
+    Definition: {fileID: 11400000, guid: e173366b871d06a4b8f106d568c05a12, type: 2}
+    Locked: 0
+    HasStartingPosition: 0
+    StartingPosition: {x: 0, y: 0}
   - Id: 3
-    Definition: {fileID: 11400000, guid: bc57116c23ae9b140875eb301d0038ec, type: 2}
+    Definition: {fileID: 11400000, guid: e2170de6a0f94104ca8d666160d1eb42, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
   - Id: 4
     Definition: {fileID: 11400000, guid: bc57116c23ae9b140875eb301d0038ec, type: 2}
+    Locked: 0
+    HasStartingPosition: 0
+    StartingPosition: {x: 0, y: 0}
+  - Id: 5
+    Definition: {fileID: 11400000, guid: 963eecc2e7dd80b45b6124677cc59a43, type: 2}
+    Locked: 0
+    HasStartingPosition: 0
+    StartingPosition: {x: 0, y: 0}
+  - Id: 6
+    Definition: {fileID: 11400000, guid: 084d23c0a6b7c9043951a761567cd54e, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
