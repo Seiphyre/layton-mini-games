@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using VForge.BoardPieces.Definitions;
+using VForge.BoardPieces.Views;
 using VForge.Inventories;
 using VForge.Inventories.UI;
 
@@ -11,7 +12,15 @@ namespace VForge.Gameplay
     /// </summary>
     public sealed class PieceInventoryItemView : InventoryItemView<PieceDefinition>
     {
-        [SerializeField] private Image _background;
+        [SerializeField] private PieceDefinitionView definitionView;
+        [SerializeField] private float blockSize = 64;
+
+
+
+        public void Initialize(PieceDefinition pieceDefinition)
+        {
+            definitionView.Initialize(pieceDefinition, blockSize);
+        }
 
 
 
@@ -20,8 +29,7 @@ namespace VForge.Gameplay
 
         protected override void OnBind()
         {
-            // Assign icon, color, etc.
-            _background.color = TypedItem.Data.Style.Color;
+            definitionView.Initialize(TypedItem.Data, blockSize);
         }
 
         protected override void OnUnbind()

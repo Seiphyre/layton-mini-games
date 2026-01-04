@@ -146,19 +146,16 @@ namespace VForge.Gameplay
 
         private void OnDragExitBoard()
         {
-            Debug.Log("Exit");
             HidePreviewAndShowProxy();
         }
 
         private void OnDragEnterBoard()
         {
-            Debug.Log("Enter");
             ShowPreviewAndHideProxy();
         }
 
         private void OnDragHoverCell(Vector2Int cellPosition)
         {
-            Debug.Log("Hover");
             MovePreviewAndSetValidity(cellPosition);
         }
 

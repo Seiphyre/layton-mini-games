@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VForge.BoardPieces.Definitions;
+using VForge.BoardPieces.Views;
 
 public class PieceDragView : MonoBehaviour
 {
-    [SerializeField] private Image _background;
+    [SerializeField] private PieceDefinitionView definitionView;
+    [SerializeField] private float blockSize = 64;
 
 
 
     public void Initialize(PieceDefinition pieceDefinition)
     {
-        _background.color = pieceDefinition.Style.Color;
+        definitionView.Initialize(pieceDefinition, blockSize);
     }
 }
