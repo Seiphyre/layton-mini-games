@@ -50,3 +50,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardRoot: {fileID: 5526495448450492673}
   piecePrefab: {fileID: 3362803623567512274, guid: 1b57bc73d9fe4aa4781241348913b23a, type: 3}
+  pieceLockedPrefab: {fileID: 3362803623567512274, guid: d7d04fbdbfde9774793613fe802761ce, type: 3}

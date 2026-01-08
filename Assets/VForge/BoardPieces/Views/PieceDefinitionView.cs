@@ -93,7 +93,7 @@ namespace VForge.BoardPieces.Views
             return (showBlocks, showPiece) switch {
                 (showBlocks: true, showPiece: false) => 1,
                 (showBlocks: true, showPiece: true) => 0.5f,
-                (showBlocks: false, _) => 0,
+                _ => 0,
             };
         }
     }

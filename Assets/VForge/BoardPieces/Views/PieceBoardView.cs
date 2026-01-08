@@ -12,6 +12,7 @@ namespace VForge.BoardPieces.Views
     {
         [SerializeField] private RectTransform boardRoot;
         [SerializeField] private PieceView piecePrefab;
+        [SerializeField] private PieceView pieceLockedPrefab;
 
         private IBoardViewContext viewContext;
         private PieceBoard board;
@@ -90,7 +91,7 @@ namespace VForge.BoardPieces.Views
 
         private void CreatePieceView(Piece piece)
         {
-            var v = Instantiate(piecePrefab, boardRoot);
+            var v = Instantiate(piece.IsLocked ? pieceLockedPrefab : piecePrefab, boardRoot);
 
             v.name = $"Piece {piece.Id} ({piece.CellPosition.x},{piece.CellPosition.y})";
 
