@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   definitionView: {fileID: 1066188529134348396}
-  blockSize: 64
+  blockSize: 96
 --- !u!114 &1066188529134348396 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 662963729611465704, guid: 187cae7878fbbfd4eb32648fd1f83b21, type: 3}
