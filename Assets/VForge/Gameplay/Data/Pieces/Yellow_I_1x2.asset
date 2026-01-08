@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: Yellow_I_1x2
   Shape: {fileID: 11400000, guid: a2673b76b5ce90d409c628518b6fb74a, type: 2}
+  Visual: {fileID: 11400000, guid: f70ec56424cb69c4ead522733ab0ca42, type: 2}
   Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}

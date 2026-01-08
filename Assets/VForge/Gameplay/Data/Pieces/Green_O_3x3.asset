@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: Green_O_3x3
   Shape: {fileID: 11400000, guid: f0df2cfa3590be6409a1bc44d2767542, type: 2}
+  Visual: {fileID: 11400000, guid: 4ddcfff37bf2dcb41af506ad6808183a, type: 2}
   Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}

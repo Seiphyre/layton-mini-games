@@ -7,6 +7,7 @@ namespace VForge.BoardPieces.Definitions
     {
         public string Id;
         public ShapeDefinition Shape;
+        public PieceVisualDefinition Visual;
         public StyleDefinition Style;
     }
 }

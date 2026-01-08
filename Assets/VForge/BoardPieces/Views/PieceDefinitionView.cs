@@ -1,14 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using VForge.BoardPieces.Definitions;
 
 namespace VForge.BoardPieces.Views
 {
     public class PieceDefinitionView : UIElement
     {
-        [SerializeField] private RectTransform pieceRoot;
+        [Header("Blocks Settings"), Space]
+        [SerializeField] private RectTransform blocksRoot;
         [SerializeField] private PieceBlockView blockPrefab;
+        [SerializeField] private bool showBlocks = true;
+
+        [Header("Piece Settings"), Space]
+        [SerializeField] private Image coloredVisual;
+        [SerializeField] private Image maskVisual;
+        [SerializeField] private bool showPiece = true;
 
         private float blockSize;
         private PieceDefinition definition;
@@ -28,7 +36,7 @@ namespace VForge.BoardPieces.Views
 
         private void CreateView()
         {
-            foreach (Transform c in pieceRoot)
+            foreach (Transform c in blocksRoot)
             {
                 var block = c.GetComponent<PieceBlockView>();
                 if (block != null)
@@ -44,7 +52,7 @@ namespace VForge.BoardPieces.Views
 
             foreach (var cell in definition.Shape.Cells)
             {
-                var b = Instantiate(blockPrefab, pieceRoot);
+                var b = Instantiate(blockPrefab, blocksRoot);
 
                 b.name = $"Block ({cell.x},{cell.y})";
 
@@ -52,12 +60,23 @@ namespace VForge.BoardPieces.Views
                 b.RectTransform.anchorMin = Vector2.zero;
                 b.RectTransform.pivot = Vector2.zero;
 
-                b.SetColor(definition.Style.Color);
+                b.SetColor(definition.Style.Color.WithOpacity(GetBlockOpacity()));
                 b.SetLocalOffset(cell, blockSize);
                 b.SetSize(new Vector2(blockSize, blockSize));
                 b.SetLayoutSize(new Vector2(blockSize, blockSize));
 
                 _blockViews.Add(b);
+            }
+
+            if (coloredVisual != null)
+            {
+                coloredVisual.sprite = definition.Visual.ColoredSprite;
+            }
+
+            if (maskVisual != null)
+            {
+                maskVisual.sprite = definition.Visual.MaskSprite;
+                maskVisual.color = definition.Style.Color;
             }
         }
 
@@ -67,6 +86,15 @@ namespace VForge.BoardPieces.Views
             float maxY = definition.Shape.Cells.Max(cell => cell.y);
 
             return new Vector2(1 + maxX, 1 + maxY) * blockSize;
+        }
+
+        private float GetBlockOpacity()
+        {
+            return (showBlocks, showPiece) switch {
+                (showBlocks: true, showPiece: false) => 1,
+                (showBlocks: true, showPiece: true) => 0.5f,
+                (showBlocks: false, _) => 0,
+            };
         }
     }
 }
