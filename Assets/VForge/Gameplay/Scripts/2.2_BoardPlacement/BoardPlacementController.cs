@@ -20,7 +20,7 @@ namespace VForge.Gameplay
     /// - NO inventory mutation
     /// - NO DropZone usage
     /// </summary>
-    public sealed class PlacementController : IPlacementContext
+    public sealed class BoardPlacementController : IPlacementContext, IDisposable
     {
 
         private readonly PieceBoard board;
@@ -36,7 +36,7 @@ namespace VForge.Gameplay
         // Constructor
         // ----------------------------
 
-        public PlacementController(PieceBoard board)
+        public BoardPlacementController(PieceBoard board)
         {
             this.board = board;
         }
@@ -146,6 +146,11 @@ namespace VForge.Gameplay
                 default:
                     return PlacementOperationResult.Fail("Invalid placement intent.");
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

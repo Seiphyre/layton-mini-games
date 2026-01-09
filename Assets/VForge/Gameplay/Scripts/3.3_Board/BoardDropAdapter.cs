@@ -10,7 +10,7 @@ using VForge.Inventories;
 
 namespace VForge.Gameplay
 {
-    public sealed class BoardDropAdapter
+    public sealed class BoardDropAdapter : IDisposable
     {
         private readonly DragController dragSystem;
         private readonly PieceBoardView pieceBoardView;
@@ -239,6 +239,11 @@ namespace VForge.Gameplay
         {
             IsDragOnBoard = false;
             DragHoveredCell = null;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 

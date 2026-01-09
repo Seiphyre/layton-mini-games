@@ -20938,13 +20938,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0a9ecc1885fa004c8451ced2f208761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragController: {fileID: 100650610}
-  dragProxyFactory: {fileID: 11400000, guid: 785f41ac4e1f4194eb6a2f7b362ecbc1, type: 2}
-  boardView: {fileID: 2142432845}
-  pieceBoardViewPrefab: {fileID: 4644951857108012364, guid: c6476983ab2f4604dbeacfd662536359, type: 3}
-  boardData: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}
-  pieceInventoryView: {fileID: 330309745}
-  piecesSetData: {fileID: 11400000, guid: 4cf21ebd6c44b0b4591f59925f56787a, type: 2}
+  BoardDefinition: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}
+  InventoryDefinition: {fileID: 11400000, guid: 4cf21ebd6c44b0b4591f59925f56787a, type: 2}
+  PieceBoardViewPrefab: {fileID: 4644951857108012364, guid: c6476983ab2f4604dbeacfd662536359, type: 3}
+  DragProxyFactory: {fileID: 11400000, guid: 785f41ac4e1f4194eb6a2f7b362ecbc1, type: 2}
+  DragController: {fileID: 100650610}
+  BoardView: {fileID: 2142432845}
+  InventoryView: {fileID: 330309745}
 --- !u!4 &613437796
 Transform:
   m_ObjectHideFlags: 0

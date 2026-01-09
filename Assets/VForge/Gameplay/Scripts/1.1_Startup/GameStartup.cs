@@ -10,169 +10,247 @@ using VForge.Inventories;
 using VForge.Boards.Definitions;
 using VForge.Inventories.UI;
 
+
 namespace VForge.Gameplay
 {
     public class GameStartup : MonoBehaviour
     {
-        [Header("Interaction")]
-        [SerializeField] private DragController dragController;
-        [SerializeField] private DragProxyFactory dragProxyFactory;
-
-        [Header("Board")]
-        [SerializeField] private BoardView boardView;
-        [SerializeField] private PieceBoardView pieceBoardViewPrefab;
-        [SerializeField] private BoardDefinition boardData;
-
-        [Header("Inventory")]
-        [SerializeField] private PieceInventoryView pieceInventoryView;
-        [SerializeField] private InventoryDefinition piecesSetData;
-
-        private PieceBoard pieceBoard;
-        private Inventory<PieceDefinition> inventory;
-        private VictoryValidator victoryValidator;
 
 
+        [Header("Settings"), Space]
+        [SerializeField] private BoardDefinition BoardDefinition;
+        [SerializeField] private InventoryDefinition InventoryDefinition;
+
+        [Space]
+        [SerializeField] private PieceBoardView PieceBoardViewPrefab;
+
+        [Space]
+        [SerializeField] private DragProxyFactory DragProxyFactory;
+
+        [Header("References")]
+        [SerializeField] private DragController DragController;
+
+        [Space]
+        [SerializeField] private BoardView BoardView;
+        [SerializeField] private PieceInventoryView InventoryView;
+
+        // --
+
+        private Board _board;
+        private PieceBoard _pieceBoard;
+        private Inventory<PieceDefinition> _inventory;
+
+        private int _startPieceId = -1;
+
+        // --
+
+        private PieceBoardView _pieceBoardView;
+
+        // --
+
+        private BoardPlacementController _boardPlacementController;
+        private InventoryUsageController _inventoryUsageController;
+
+        // --
+
+        private BoardDropAdapter _boardDropAdapter;
+        private InventoryDragAdapter _inventoryDragAdapter;
+        private PieceDragAdapter _pieceDragAdapter;
+
+        // --
+
+        private VictoryValidator _victoryValidator;
+        private GameplayController _gameplayController;
+
+
+        // --------------------------------------------------------
+        // Initialization
+        // --------------------------------------------------------
 
         private void Start()
         {
-            // 1. Build runtime board and link it to view
-            var board = new Board(boardData);
+            LoadLevel();
 
-            boardView.BoardData = boardData;
+            // Todo: Refactoring of BoardDropAdapter to export placement logic in the gameplayController
+            // Todo: Merging PieceDragAdapter and BoardDropAdapter into BoardDragNDropAdapter
+            // Todo: Renaming InventoryDragAdapter to InventoryDragNDropAdapter
+            // Todo: Merging Board and PieceBoard into GameBoard
+            // Todo: Create alias GameInventory/GameInventoryItem, for Inventory<PieceDefinition>/InventoryItem<PieceDefinition>
+            // Todo: Rename PieceInventoryView to GameInventoryView & PieceInventoryItemView to GameInventoryItemView
+            // Todo: Remake InventoryDefinition/InventoryItemData to a proper LevelData
+        }
 
-            // 2. Build runtime pieceBoard and link it to view
-            pieceBoard = new PieceBoard(board);
 
-            var pieceBoardView = Instantiate(pieceBoardViewPrefab);
-            pieceBoardView.name = "Pieces";
-            pieceBoardView.Initialize(pieceBoard, boardView);
 
-            boardView.AttachToLayer(BoardViewLayer.Pieces, pieceBoardView.RectTransform);
+        // --------------------------------------------------------
+        // Public API
+        // --------------------------------------------------------
 
-            // 3. Build runtime inventory / board and link it to view
-            inventory = new Inventory<PieceDefinition>();
-            int startPieceId = -1;
+        public void Restart()
+        {
+            UnloadLevel();
+            LoadLevel();
+        }
 
-            foreach (var inventoryItem in piecesSetData.Pieces)
+
+
+        // --------------------------------------------------------
+        // Internal Helpers
+        // --------------------------------------------------------
+
+        private void LoadLevel()
+        {
+            // ---------------------------------
+            // 1. Create runtime data (level initialization)
+            // ---------------------------------
+
+            // 1.1 Build Board
+
+            _board = new Board(BoardDefinition);
+
+            // 1.2 Build Piece Board
+
+            _pieceBoard = new PieceBoard(_board);
+
+            // 1.4 Create Inventory
+
+            _inventory = new Inventory<PieceDefinition>();
+
+            // 1.5 Place pieces on board
+
+            var boardPieces = InventoryDefinition.Pieces.Where(p => p.HasStartingPosition);
+            foreach (var boardPiece in boardPieces)
             {
-                if (inventoryItem.HasStartingPosition)
-                {
-                    var result = pieceBoard.TryPlace(
-                        inventoryItem.Definition,
-                        inventoryItem.StartingPosition,
-                        inventoryItem.Locked,
-                        out var piece);
+                var result = _pieceBoard.TryPlace(
+                    boardPiece.Definition,
+                    boardPiece.StartingPosition,
+                    boardPiece.Locked,
+                    out var piece);
 
-                    if (!result.Success)
-                    {
-                        Debug.LogError($"Failed to place starting piece {inventoryItem.Id}: {result.Reason}");
-                        continue;
-                    }
-
-                    startPieceId = piece.Id;
-                }
-                else
+                if (!result.Success)
                 {
-                    inventory.Add(new InventoryItem<PieceDefinition>(null, inventoryItem.Definition));
+                    Debug.LogError($"Failed to place starting piece {piece.Id}: {result.Reason}");
+                    continue;
                 }
+
+                if (_startPieceId == -1)
+                    _startPieceId = piece.Id;
             }
 
-            pieceInventoryView.Bind(inventory);
+            // 1.6 Place pieces in nventory
 
-            // Placement
-
-            var piecePlacementController = new PlacementController(pieceBoard);
-            var inventoryUsageController = new InventoryUsageController(inventory);
-
-            // --
-
-            var inventoryDragAdapter = new InventoryDragAdapter(dragController, pieceInventoryView, new InventoryDragOptions()
+            var inventoryitems = InventoryDefinition.Pieces.Where(p => !p.HasStartingPosition);
+            foreach (var inventoryItem in inventoryitems)
             {
-                CreateProxy = dragProxyFactory != null,
-                ProxyFactory = dragProxyFactory
+                _inventory.Add(new InventoryItem<PieceDefinition>(null, inventoryItem.Definition));
+            }
+
+
+
+            // ---------------------------------
+            // 2. Bind data to views (bind views)
+            // ---------------------------------
+
+            // 2.1 Initialize board view
+
+            BoardView.BoardData = BoardDefinition;
+
+            // 2.2 Create piece board view
+
+            _pieceBoardView = Instantiate(PieceBoardViewPrefab);
+            _pieceBoardView.name = "Pieces";
+
+            BoardView.AttachToLayer(BoardViewLayer.Pieces, _pieceBoardView.RectTransform);
+
+            _pieceBoardView.Initialize(_pieceBoard, BoardView);
+
+            // 2.3 Initialize inventory view
+
+            InventoryView.Bind(_inventory);
+
+
+
+            // ---------------------------------
+            // 3. Create system controllers, UI interactions and gameplay (Gameplay bootsrap)
+            // ---------------------------------
+
+            // 3.1.1 Create board placement controller
+
+            _boardPlacementController = new BoardPlacementController(_pieceBoard);
+
+            // 3.1.2 Create inventory usage controller
+
+            _inventoryUsageController = new InventoryUsageController(_inventory);
+
+            // ---------------------------------
+
+            // 3.2.1 Create inventory view interactions
+
+            _inventoryDragAdapter = new InventoryDragAdapter(DragController, InventoryView, new InventoryDragOptions()
+            {
+                CreateProxy = DragProxyFactory != null,
+                ProxyFactory = DragProxyFactory
             });
 
-            inventoryDragAdapter.DragStarted += (inventoryItem) =>
-            {
-                inventoryUsageController.BeginUsage(inventoryItem);
-                piecePlacementController.BeginCreatePlacement(inventoryItem.Data);
-            };
+            // 3.2.2 Create board view interactions
 
-            inventoryDragAdapter.DragEnded += () =>
+            _pieceDragAdapter = new PieceDragAdapter(DragController, _pieceBoardView, new PieceDragOptions()
             {
-                inventoryUsageController.EndUsage();
-                piecePlacementController.EndPlacement();
-            };
-
-            // --
-
-            var pieceDragAdapter = new PieceDragAdapter(dragController, pieceBoardView, new PieceDragOptions()
-            {
-                CreateProxy = dragProxyFactory != null,
-                ProxyFactory = dragProxyFactory
+                CreateProxy = DragProxyFactory != null,
+                ProxyFactory = DragProxyFactory
             });
 
-            pieceDragAdapter.DragStarted += (piece) =>
-            {
-                piecePlacementController.BeginMovePlacement(piece);
-            };
+            _boardDropAdapter = new BoardDropAdapter(_boardPlacementController, DragController, _pieceBoardView, BoardView);
 
-            pieceDragAdapter.DragEnded += () =>
-            {
-                piecePlacementController.EndPlacement();
-            };
+            // ---------------------------------
 
-            pieceDragAdapter.DragCancelled += (reason) =>
-            {
-                if (reason != DragCancelReason.ReleasedNoTarget)
-                    return;
+            // 3.3.1 Create game rules
 
-                if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Move)
-                {
-                    var piece = piecePlacementController.CurrentPlacement.Piece;
-
-                    piecePlacementController.BeginRemovePlacement(piece);
-                    piecePlacementController.ConfirmPlacement();
-                    inventoryUsageController.ReturnItem(new InventoryItem<PieceDefinition>(null, piece.Definition));
-                }
-            };
-
-            // --
-
-            var boardDragAdapter = new BoardDropAdapter(piecePlacementController, dragController, pieceBoardView, boardView);
-            boardDragAdapter.DragDropped += (payload, cellPosition) =>
-            {
-                var placementOpResult = piecePlacementController.ValidatePlacementAt(cellPosition);
-                if (!placementOpResult.Success)
-                    return;
-
-                // Resolve inventory usage
-                if (piecePlacementController.CurrentPlacement.Kind == PlacementType.Create)
-                {
-                    var inventoryOpresult = inventoryUsageController.CanConfirmUsage();
-                    if (!inventoryOpresult.Success)
-                        return;
-
-                    inventoryUsageController.ConfirmUsage();
-                }
-
-                piecePlacementController.SetPlacementPosition(cellPosition);
-                piecePlacementController.ConfirmPlacement();
-            };
-
-            // --
-
-            victoryValidator = new VictoryValidator(new IVictoryRule[]
+            _victoryValidator = new VictoryValidator(new IVictoryRule[]
             {
                 new EmptyInventoryRule(),
                 new SingleChainOnBoardRule(
-                    startPieceId,
+                    _startPieceId,
                     new OrMatchRule(new IMatchRule[]
                     {
                         new ColorMatchRule(),
                         new TagMatchRule()
                     }))
             });
+
+            // 3.3.2 Create gameplay
+
+            _gameplayController = new GameplayController(_boardPlacementController, _inventoryUsageController, _boardDropAdapter, _pieceDragAdapter, _inventoryDragAdapter);
+        }
+
+        private void UnloadLevel()
+        {
+            // 1. Dispose gameplay orchestrator
+            _gameplayController?.Dispose();
+            _gameplayController = null;
+
+            _victoryValidator = null;
+
+            // 2. Dispose gameplay controllers
+            _boardPlacementController?.Dispose();
+            _inventoryUsageController?.Dispose();
+
+            // 3. Dispose UI adapters
+            _boardDropAdapter?.Dispose();
+            _pieceDragAdapter?.Dispose();
+            _inventoryDragAdapter?.Dispose();
+
+            // 4. Unbind views
+            //_pieceBoardView.Unbind();
+            //BoardView.Unbind();
+            InventoryView.Unbind();
+
+            // 5. Drop runtime data (GC will clean)
+            _board = null;
+            _pieceBoard = null;
+            _inventory = null;
+
+            _startPieceId = -1;
         }
     }
 }

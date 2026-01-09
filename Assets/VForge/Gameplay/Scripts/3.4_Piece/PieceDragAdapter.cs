@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace VForge.Gameplay
 {
-    public sealed class PieceDragAdapter
+    public sealed class PieceDragAdapter : IDisposable
     {
         public event Action<Piece> DragStarted;
         public event Action DragEnded;
@@ -111,6 +111,11 @@ namespace VForge.Gameplay
                 return;
 
             DragCancelled?.Invoke(reason);
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 

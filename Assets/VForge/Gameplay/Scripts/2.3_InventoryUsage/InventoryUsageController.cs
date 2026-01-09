@@ -1,5 +1,6 @@
 using VForge.Inventories;
 using VForge.BoardPieces.Definitions;
+using System;
 
 namespace VForge.Gameplay
 {
@@ -7,7 +8,7 @@ namespace VForge.Gameplay
     /// Handles inventory side-effects of gameplay actions
     /// (reserve / commit / cancel).
     /// </summary>
-    public sealed class InventoryUsageController
+    public sealed class InventoryUsageController : IDisposable
     {
         private readonly Inventory<PieceDefinition> inventory;
 
@@ -72,6 +73,11 @@ namespace VForge.Gameplay
                 return InventoryOperationResult.Fail("Item is null.");
 
             return inventory.Add(item);
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

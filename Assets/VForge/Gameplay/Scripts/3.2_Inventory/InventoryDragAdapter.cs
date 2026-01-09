@@ -9,7 +9,7 @@ using VForge.BoardPieces.Views;
 
 namespace VForge.Gameplay
 {
-    public sealed class InventoryDragAdapter
+    public sealed class InventoryDragAdapter : IDisposable
     {
         public event Action<InventoryItem<PieceDefinition>> DragStarted;
         public event Action DragEnded;
@@ -100,6 +100,10 @@ namespace VForge.Gameplay
             DragEnded?.Invoke();
         }
 
+        public void Dispose()
+        {
+            
+        }
     }
 
 }
