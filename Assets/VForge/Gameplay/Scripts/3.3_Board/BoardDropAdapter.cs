@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
-using VForge.BoardPieces.Definitions;
-using VForge.BoardPieces.Runtime;
+
 using VForge.BoardPieces.Views;
 using VForge.Boards.Views;
-using VForge.Inventories;
+
+
 
 namespace VForge.Gameplay
 {
@@ -81,16 +82,17 @@ namespace VForge.Gameplay
             this.pieceBoardView = pieceBoardView ?? throw new ArgumentNullException(nameof(pieceBoardView));
             this.boardView = boardView ?? throw new ArgumentNullException(nameof(boardView));
 
-
             // --
 
-            this.dropTarget = boardView.GetComponent<DropTarget>();
+            dropTarget = boardView.gameObject.AddComponent<DropTarget>();
 
-            if (dropTarget == null)
-                return;
+            if (dropTarget != null)
+            {
+                dropTarget.ClearRules();
+                dropTarget.AddRule(payload => payloadResolver.TryResolve(payload, out _));
+            }
 
-            dropTarget.ClearRules();
-            dropTarget.AddRule(payload => payloadResolver.TryResolve(payload, out _));
+            // --
 
             dragSystem.DragStarted += OnDragStarted;
             dragSystem.DragUpdated += OnDragUpdated;
@@ -98,8 +100,15 @@ namespace VForge.Gameplay
             dragSystem.DragEnded += OnDragEnded;
         }
 
+        public void Dispose()
+        {
+            UnityEngine.Object.Destroy(dropTarget);
+        }
+
+
+
         // -----------------------------------------
-        // Drag Lifecycle
+        // Drag lifecycle
         // -----------------------------------------
 
         private void OnDragStarted(DragSession session)
@@ -239,11 +248,6 @@ namespace VForge.Gameplay
         {
             IsDragOnBoard = false;
             DragHoveredCell = null;
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 
