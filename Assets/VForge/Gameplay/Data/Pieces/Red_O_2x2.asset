@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Red_O_2x2
   m_EditorClassIdentifier: 
   Id: Red_O_2x2
+  Tag: {fileID: 11400000, guid: 904e8c96ac6265a4fbff9ab4b2115201, type: 2}
   Shape: {fileID: 11400000, guid: fa4c78915db50ae4e9d292e040361de6, type: 2}
   Visual: {fileID: 11400000, guid: cf16d6abb165eed46be1a99d00be5822, type: 2}
   Style: {fileID: 11400000, guid: 154dff661ae9d2a4fbce46aa78c3555c, type: 2}

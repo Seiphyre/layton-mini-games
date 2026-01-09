@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Yellow_J_2x2
   m_EditorClassIdentifier: 
   Id: Yellow_J_2x2
+  Tag: {fileID: 11400000, guid: d68cd79fcf5b72b43831c688bec170a7, type: 2}
   Shape: {fileID: 11400000, guid: 6aeaee1328c89c544a693638c509fe25, type: 2}
   Visual: {fileID: 11400000, guid: 2929c9b13349d924285650d23105944b, type: 2}
   Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}

@@ -28,13 +28,13 @@ namespace VForge.Gameplay
         [SerializeField] private InventoryDefinition piecesSetData;
 
         private PieceBoard pieceBoard;
+        private Inventory<PieceDefinition> inventory;
+        private VictoryValidator victoryValidator;
 
 
 
         private void Start()
         {
-            Debug.Log("Todo: Transparency on dragged items, Real DragProxyView/inventoryItemView, New shapes + Level design, Validation + Submit button ");
-
             // 1. Build runtime board and link it to view
             var board = new Board(boardData);
 
@@ -50,7 +50,8 @@ namespace VForge.Gameplay
             boardView.AttachToLayer(BoardViewLayer.Pieces, pieceBoardView.RectTransform);
 
             // 3. Build runtime inventory / board and link it to view
-            var inventory = new Inventory<PieceDefinition>();
+            inventory = new Inventory<PieceDefinition>();
+            int startPieceId = -1;
 
             foreach (var inventoryItem in piecesSetData.Pieces)
             {
@@ -67,6 +68,8 @@ namespace VForge.Gameplay
                         Debug.LogError($"Failed to place starting piece {inventoryItem.Id}: {result.Reason}");
                         continue;
                     }
+
+                    startPieceId = piece.Id;
                 }
                 else
                 {
@@ -156,75 +159,20 @@ namespace VForge.Gameplay
                 piecePlacementController.SetPlacementPosition(cellPosition);
                 piecePlacementController.ConfirmPlacement();
             };
-        }
 
+            // --
 
-
-        public void LoadStartingPieces(PieceBoard board, InventoryDefinition dataSet)
-        {
-            if (board == null || dataSet == null)
-                return;
-
-            foreach (var data in dataSet.Pieces)
+            victoryValidator = new VictoryValidator(new IVictoryRule[]
             {
-                if (!data.HasStartingPosition)
-                    continue;
-
-                var result = board.TryPlace(
-                    data.Definition,
-                    data.StartingPosition,
-                    data.Locked,
-                    out var piece);
-
-                if (!result.Success)
-                {
-                    Debug.LogError($"Failed to place starting piece {data.Id}: {result.Reason}");
-                    continue;
-                }
-            }
-        }
-
-        Piece piece;
-        Piece Piece
-        {
-            get
-            {
-                if (piece == null)
-                {
-                    var inventoryItem = piecesSetData.Pieces.First();
-                    piece = pieceBoard.GetPieceAt(inventoryItem.StartingPosition.x, inventoryItem.StartingPosition.y);
-                }
-
-                return piece;
-            }
-        }
-
-        private void Update()
-        {
-            Vector2Int dir = Vector2Int.zero;
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-                dir = Vector2Int.down;
-
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-                dir = Vector2Int.up;
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                dir = Vector2Int.left;
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                dir = Vector2Int.right;
-
-            if (dir != Vector2Int.zero)
-            {
-                Debug.Log("Move");
-                var res = pieceBoard.TryMove(Piece, Piece.CellPosition + dir);
-
-                if (!res.Success)
-                {
-                    Debug.Log(res.Reason);
-                }
-            }
+                new EmptyInventoryRule(),
+                new SingleChainOnBoardRule(
+                    startPieceId,
+                    new OrMatchRule(new IMatchRule[]
+                    {
+                        new ColorMatchRule(),
+                        new TagMatchRule()
+                    }))
+            });
         }
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Green_I_1x3
   m_EditorClassIdentifier: 
   Id: Green_I_1x3
+  Tag: {fileID: 11400000, guid: a55d93c6a27354e44a720b2aedcde73f, type: 2}
   Shape: {fileID: 11400000, guid: 156ce812483139045babbff2c5597756, type: 2}
   Visual: {fileID: 11400000, guid: 9f3b5b1c6f7ca92499324df4351130c8, type: 2}
   Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}
