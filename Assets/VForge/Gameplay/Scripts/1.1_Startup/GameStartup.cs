@@ -80,6 +80,7 @@ namespace VForge.Gameplay
             // Todo: Create alias GameInventory/GameInventoryItem, for Inventory<PieceDefinition>/InventoryItem<PieceDefinition>
             // Todo: Rename PieceInventoryView to GameInventoryView & PieceInventoryItemView to GameInventoryItemView
             // Todo: Remake InventoryDefinition/InventoryItemData to a proper LevelData
+            // Todo: BoardView.Bind() should take Board (instead of BoardDefinition)
         }
 
 
@@ -155,7 +156,7 @@ namespace VForge.Gameplay
 
             // 2.1 Initialize board view
 
-            BoardView.BoardData = BoardDefinition;
+            BoardView.Bind(BoardDefinition);
 
             // 2.2 Create piece board view
 
@@ -193,6 +194,7 @@ namespace VForge.Gameplay
                 CreateProxy = DragProxyFactory != null,
                 ProxyFactory = DragProxyFactory
             });
+            _inventoryDragAdapter.Initialize();
 
             // 3.2.2 Create board view interactions
 
@@ -201,8 +203,10 @@ namespace VForge.Gameplay
                 CreateProxy = DragProxyFactory != null,
                 ProxyFactory = DragProxyFactory
             });
+            _pieceDragAdapter.Initialize();
 
             _boardDropAdapter = new BoardDropAdapter(_boardPlacementController, DragController, _pieceBoardView, BoardView);
+            _boardDropAdapter.Initialize();
 
             // ---------------------------------
 
@@ -226,21 +230,28 @@ namespace VForge.Gameplay
                 _board,
                 _pieceBoard,
                 _inventory,
-                _boardPlacementController, 
-                _inventoryUsageController, 
+                _boardPlacementController,
+                _inventoryUsageController,
                 _victoryValidator,
-                _boardDropAdapter, 
-                _pieceDragAdapter, 
-                _inventoryDragAdapter, 
+                _boardDropAdapter,
+                _pieceDragAdapter,
+                _inventoryDragAdapter,
                 this);
+            _gameplayController.Initialize();
 
             _gameHudPresenter = new GameHudPresenter(GameHudView, _gameplayController);
             _gameHudPresenter.Initialize();
+
+            // --
+
+            _gameplayController.StartGame();
         }
 
         private void UnloadLevel()
         {
-            // 1. Dispose gameplay orchestrator
+            _gameplayController.EndGame();
+
+            // 1.Dispose gameplay orchestrator
             _gameHudPresenter?.Dispose();
             _gameHudPresenter = null;
 
@@ -251,16 +262,26 @@ namespace VForge.Gameplay
 
             // 2. Dispose gameplay controllers
             _boardPlacementController?.Dispose();
+            _boardPlacementController = null;
+
             _inventoryUsageController?.Dispose();
+            _inventoryUsageController = null;
 
             // 3. Dispose UI adapters
             _boardDropAdapter?.Dispose();
+            _boardDropAdapter = null;
+
             _pieceDragAdapter?.Dispose();
+            _pieceDragAdapter = null;
+
             _inventoryDragAdapter?.Dispose();
+            _inventoryDragAdapter = null;
 
             // 4. Unbind views
-            //_pieceBoardView.Unbind();
-            //BoardView.Unbind();
+            Destroy(_pieceBoardView);
+            _pieceBoardView = null;
+
+            BoardView.Unbind();
             InventoryView.Unbind();
 
             // 5. Drop runtime data (GC will clean)
@@ -269,6 +290,15 @@ namespace VForge.Gameplay
             _inventory = null;
 
             _startPieceId = -1;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Debug.Log("ResetLevel");
+                ResetLevel();
+            }
         }
     }
 }

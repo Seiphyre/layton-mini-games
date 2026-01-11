@@ -5,6 +5,8 @@ using VForge.Boards.Definitions;
 using VForge.Boards.Runtime;
 using System;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+using Codice.CM.Client.Differences;
 
 namespace VForge.Boards.Views
 {
@@ -79,22 +81,25 @@ namespace VForge.Boards.Views
         private float FrameThickness => Mathf.Max(gridThickness, wallThickness);
 
 
-
-        public RectTransform GetLayer(BoardViewLayer layer)
-            => layers.TryGetValue(layer, out var rt) ? rt : null;
-
-        public BoardDefinition BoardData
+        public void Bind(BoardDefinition board)
         {
-            get => boardData;
-            set
-            {
-                if (boardData == value)
-                    return;
+            if (boardData == board)
+                return;
 
-                boardData = value;
-                Rebuild();
-            }
+            boardData = board;
+            Rebuild();
         }
+
+        public void Unbind()
+        {
+            if (boardData == null)
+                return;
+
+            boardData = null;
+            Rebuild();
+        }
+
+
 
         /// <summary>
         /// Converts a board cell coordinate to local UI position
@@ -126,6 +131,12 @@ namespace VForge.Boards.Views
 
         public bool TryScreenPositionToCellPosition(Vector2 screenPos, out Vector2Int cell)
         {
+            if (boardSpace == null)
+            {
+                cell = default;
+                return false;
+            }
+
             RectTransformUtility.ScreenPointToLocalPointInRectangle(boardSpace, screenPos, null, out Vector2 localPoint);
         
             return TryLocalPositionToCellPosition(localPoint, out cell);
@@ -158,10 +169,11 @@ namespace VForge.Boards.Views
 
         public void Rebuild()
         {
+            ClearHierarchy();
+
             if (boardData == null)
                 return;
 
-            ClearHierarchy();
             CreateLayers();
             ApplyLayerOrder();
             ResizeBoard();
@@ -189,6 +201,12 @@ namespace VForge.Boards.Views
             }
 
             layers.Clear();
+            boardSpace = null;
+        }
+
+        public RectTransform GetLayer(BoardViewLayer layer)
+        {
+            return layers.TryGetValue(layer, out var rt) ? rt : null;
         }
 
         private void CreateLayers()

@@ -58,7 +58,7 @@ namespace VForge.Gameplay
         private void UpdateView()
         {
             view.SetFinishCheckEnabled(gameStarted && inventoryEmpty);
-            view.SetResetEnabled(/*gameStarted*/false);
+            view.SetResetEnabled(gameStarted);
         }
 
 

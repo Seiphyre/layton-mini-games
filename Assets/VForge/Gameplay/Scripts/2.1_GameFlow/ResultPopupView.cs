@@ -44,7 +44,6 @@ namespace VForge.Gameplay
 
         public void Show(VictoryValidationResult result)
         {
-            Debug.Log($"Show result popup: IsValid={result.IsValid}");
             gameObject.SetActive(true);
 
             switch (result.IsValid)
@@ -56,8 +55,8 @@ namespace VForge.Gameplay
                     break;
 
                 case false:
-                    titleText.text = "Not quite…";
-                    messageText.text = "Try again.";
+                    titleText.text = "Oh oh...";
+                    messageText.text = "It didn't work. Give it another try!";
                     continueButton.gameObject.SetActive(false);
                     break;
             }

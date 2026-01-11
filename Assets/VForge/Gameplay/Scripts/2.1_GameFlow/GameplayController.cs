@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using VForge.BoardPieces.Definitions;
 using VForge.BoardPieces.Runtime;
 using VForge.Boards.Runtime;
 using VForge.Inventories;
+using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 namespace VForge.Gameplay
 {
@@ -27,7 +29,7 @@ namespace VForge.Gameplay
         public bool _gameStarted = false;
 
 
-        public string LevelTitle { get; }
+        public string LevelTitle { get; private set; }
         public InventoryState InventoryState => new InventoryState(_inventory);
         public BoardState BoardState => new BoardState(_pieceBoard);
         public GameState GameState => new GameState(_pieceBoard, _inventory, _gameStarted);
@@ -72,92 +74,40 @@ namespace VForge.Gameplay
             _board = board;
             _pieceBoard = pieceBoard;
             _inventory = inventory;
+        }
 
-            LevelTitle = "The Fruit Shop~";
-
-
-            // --------------------------------------------------------------
-
-            _inventoryDragAdapter.DragStarted += (inventoryItem) =>
-            {
-                _inventoryUsageController.BeginUsage(inventoryItem);
-                _placementController.BeginCreatePlacement(inventoryItem.Data);
-            };
-
-            _inventoryDragAdapter.DragEnded += () =>
-            {
-                _inventoryUsageController.EndUsage();
-                _placementController.EndPlacement();
-            };
-
-
-
-            // --------------------------------------------------------------
-
-            _pieceDragAdapter.DragStarted += (piece) =>
-            {
-                _placementController.BeginMovePlacement(piece);
-            };
-
-            _pieceDragAdapter.DragEnded += () =>
-            {
-                _placementController.EndPlacement();
-            };
-
-            _pieceDragAdapter.DragCancelled += (reason) =>
-            {
-                if (reason != DragCancelReason.ReleasedNoTarget)
-                    return;
-
-                if (_placementController.CurrentPlacement.Kind == PlacementType.Move)
-                {
-                    var piece = _placementController.CurrentPlacement.Piece;
-
-                    _placementController.BeginRemovePlacement(piece);
-                    _placementController.ConfirmPlacement();
-                    _inventoryUsageController.ReturnItem(new InventoryItem<PieceDefinition>(null, piece.Definition));
-                }
-            };
-
-
-
-            // --------------------------------------------------------------
-
-            _boardDropAdapter.DragDropped += (payload, cellPosition) =>
-            {
-                var placementOpResult = _placementController.ValidatePlacementAt(cellPosition);
-                if (!placementOpResult.Success)
-                    return;
-
-                // Resolve inventory usage
-                if (_placementController.CurrentPlacement.Kind == PlacementType.Create)
-                {
-                    var inventoryOpresult = _inventoryUsageController.CanConfirmUsage();
-                    if (!inventoryOpresult.Success)
-                        return;
-
-                    _inventoryUsageController.ConfirmUsage();
-                }
-
-                _placementController.SetPlacementPosition(cellPosition);
-                _placementController.ConfirmPlacement();
-            };
+        public void Initialize()
+        {
+            LevelTitle = "The Fruit Shop";
 
             // --
 
-            _inventory.ItemsChanged += (sender, args) =>
-            {
-                InventoryStateChanged.Invoke(new InventoryState(_inventory));
-            };
+            _inventoryDragAdapter.DragStarted += OnInventoryDragStarted;
+            _inventoryDragAdapter.DragEnded += OnInventoryDragEnded;
 
-            // --
+            _pieceDragAdapter.DragStarted += OnPieceDragStarted;
+            _pieceDragAdapter.DragEnded += OnPieceDragEnded;
+            _pieceDragAdapter.DragCancelled += OnPieceDragCancelled;
 
-            StartGame();
+            _boardDropAdapter.DragDropped += OnDroppedOnBoard;
+
+            _inventory.ItemsChanged += OnInventoryItemChanged;
         }
 
         public void Dispose()
         {
-            
+            LevelTitle = "{Level_Title}";
+
+            _inventoryDragAdapter.DragStarted -= OnInventoryDragStarted;
+            _inventoryDragAdapter.DragEnded -= OnInventoryDragEnded;
+
+            _pieceDragAdapter.DragStarted -= OnPieceDragStarted;
+            _pieceDragAdapter.DragEnded -= OnPieceDragEnded;
+            _pieceDragAdapter.DragCancelled -= OnPieceDragCancelled;
+
+            _boardDropAdapter.DragDropped -= OnDroppedOnBoard;
+
+            _inventory.ItemsChanged -= OnInventoryItemChanged;
         }
 
 
@@ -168,6 +118,9 @@ namespace VForge.Gameplay
 
         public void StartGame()
         {
+            if (_gameStarted == true)
+                return;
+
             _gameStarted = true;
             GameStarted?.Invoke();
             GameStateChanged?.Invoke(GameState);
@@ -175,6 +128,9 @@ namespace VForge.Gameplay
 
         public void EndGame()
         {
+            if (_gameStarted == false)
+                return;
+
             _gameStarted = false;
             GameEnded?.Invoke();
             GameStateChanged?.Invoke(GameState);
@@ -190,6 +146,84 @@ namespace VForge.Gameplay
         {
             var result = _victoryValidator.Validate(GameState);
             BoardValidated?.Invoke(result);
+        }
+
+
+
+        // -----------------------------------------------------
+        // Drag events
+        // -----------------------------------------------------
+
+        private void OnInventoryDragStarted(InventoryItem<PieceDefinition> inventoryItem)
+        {
+            _inventoryUsageController.BeginUsage(inventoryItem);
+            _placementController.BeginCreatePlacement(inventoryItem.Data);
+        }
+
+        private void OnInventoryDragEnded()
+        {
+            _inventoryUsageController.EndUsage();
+            _placementController.EndPlacement();
+        }
+
+
+
+        private void OnPieceDragStarted(Piece piece)
+        {
+            _placementController.BeginMovePlacement(piece);
+        }
+
+        private void OnPieceDragEnded()
+        {
+            _placementController.EndPlacement();
+        }
+
+        private void OnPieceDragCancelled(DragCancelReason reason)
+        {
+            if (reason != DragCancelReason.ReleasedNoTarget)
+                return;
+
+            if (_placementController.CurrentPlacement.Kind == PlacementType.Move)
+            {
+                var piece = _placementController.CurrentPlacement.Piece;
+
+                _placementController.BeginRemovePlacement(piece);
+                _placementController.ConfirmPlacement();
+                _inventoryUsageController.ReturnItem(new InventoryItem<PieceDefinition>(null, piece.Definition));
+            }
+        }
+
+
+
+        public void OnDroppedOnBoard(BoardDropPayloadInfo payload, Vector2Int cellPosition)
+        {
+            var placementOpResult = _placementController.ValidatePlacementAt(cellPosition);
+            if (!placementOpResult.Success)
+                return;
+
+            // Resolve inventory usage
+            if (_placementController.CurrentPlacement.Kind == PlacementType.Create)
+            {
+                var inventoryOpresult = _inventoryUsageController.CanConfirmUsage();
+                if (!inventoryOpresult.Success)
+                    return;
+
+                _inventoryUsageController.ConfirmUsage();
+            }
+
+            _placementController.SetPlacementPosition(cellPosition);
+            _placementController.ConfirmPlacement();
+        }
+
+
+
+        // -----------------------------------------------------
+        // State events
+        // -----------------------------------------------------
+
+        public void OnInventoryItemChanged(object _, NotifyCollectionChangedEventArgs __)
+        {
+            InventoryStateChanged.Invoke(new InventoryState(_inventory));
         }
     }
 }

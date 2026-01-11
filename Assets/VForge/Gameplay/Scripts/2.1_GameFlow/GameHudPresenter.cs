@@ -67,14 +67,14 @@ namespace VForge.Gameplay
 
         private void OnRetryClicked()
         {
-            //gameplay.ResetGame();
-            UnityEditor.EditorApplication.ExitPlaymode();
+            view.OverlayRoot.HideAll();
+            gameplay.ResetGame();
         }
 
         private void OnContinueClicked()
         {
-            //gameplay.ResetGame();
-            UnityEditor.EditorApplication.ExitPlaymode();
+            view.OverlayRoot.HideAll();
+            gameplay.ResetGame();
         }
 
         private void OnDismissClicked()

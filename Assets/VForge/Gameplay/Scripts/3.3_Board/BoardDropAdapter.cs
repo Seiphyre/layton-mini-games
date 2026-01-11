@@ -18,7 +18,7 @@ namespace VForge.Gameplay
         private readonly BoardView boardView;
         private readonly IPlacementContext placement;
 
-        private readonly DropTarget dropTarget;
+        private DropTarget dropTarget;
         private readonly BoardDropPayloadResolver payloadResolver = new BoardDropPayloadResolver();
 
         private Vector2Int? dragHoveredCell;
@@ -81,9 +81,10 @@ namespace VForge.Gameplay
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem));
             this.pieceBoardView = pieceBoardView ?? throw new ArgumentNullException(nameof(pieceBoardView));
             this.boardView = boardView ?? throw new ArgumentNullException(nameof(boardView));
+        }
 
-            // --
-
+        public void Initialize()
+        {
             dropTarget = boardView.gameObject.AddComponent<DropTarget>();
 
             if (dropTarget != null)
@@ -103,6 +104,12 @@ namespace VForge.Gameplay
         public void Dispose()
         {
             UnityEngine.Object.Destroy(dropTarget);
+            dropTarget = null;
+
+            dragSystem.DragStarted -= OnDragStarted;
+            dragSystem.DragUpdated -= OnDragUpdated;
+            dragSystem.DragDropped -= OnDragDropped;
+            dragSystem.DragEnded -= OnDragEnded;
         }
 
 

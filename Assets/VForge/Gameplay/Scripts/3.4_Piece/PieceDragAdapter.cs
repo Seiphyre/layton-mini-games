@@ -40,9 +40,10 @@ namespace VForge.Gameplay
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem)); ;
             this.pieceBoardView = pieceBoardView ?? throw new ArgumentNullException(nameof(pieceBoardView)); ;
             this.options = options ?? throw new ArgumentNullException(nameof(options)); ;
+        }
 
-            // --
-
+        public void Initialize()
+        {
             foreach (var itemView in pieceBoardView.PieceViews)
             {
                 OnPieceViewCreated(itemView);
@@ -64,6 +65,15 @@ namespace VForge.Gameplay
             {
                 OnPieceViewDestroyed(itemView);
             }
+
+            // --
+
+            pieceBoardView.OnPieceViewCreated -= OnPieceViewCreated;
+            pieceBoardView.OnPieceViewDestroyed -= OnPieceViewDestroyed;
+
+            dragSystem.DragStarted -= OnDragStarted;
+            dragSystem.DragEnded -= OnDragEnded;
+            dragSystem.DragCancelled -= OnDragCancelled;
         }
 
 

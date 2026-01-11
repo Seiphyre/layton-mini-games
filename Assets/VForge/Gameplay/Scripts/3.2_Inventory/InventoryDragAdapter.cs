@@ -40,9 +40,10 @@ namespace VForge.Gameplay
             this.dragSystem = dragSystem ?? throw new ArgumentNullException(nameof(dragSystem)); ;
             this.inventoryView = inventoryView ?? throw new ArgumentNullException(nameof(inventoryView)); ;
             this.options = options ?? throw new ArgumentNullException(nameof(options)); ;
+        }
 
-            // --
-
+        public void Initialize()
+        {
             foreach (var itemView in inventoryView.ItemViews)
             {
                 OnItemViewCreated(itemView);
@@ -63,6 +64,14 @@ namespace VForge.Gameplay
             {
                 OnItemViewDestroyed(itemView);
             }
+
+            // --
+
+            inventoryView.OnItemViewCreated -= OnItemViewCreated;
+            inventoryView.OnItemViewDestroyed -= OnItemViewDestroyed;
+
+            dragSystem.DragStarted -= OnDragStarted;
+            dragSystem.DragEnded -= OnDragEnded;
         }
 
 
