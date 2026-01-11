@@ -13,7 +13,7 @@ using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
-    public class GameStartup : MonoBehaviour
+    public class GameStartup : MonoBehaviour, ILevelResetService
     {
 
 
@@ -31,6 +31,7 @@ namespace VForge.Gameplay
         [SerializeField] private DragController DragController;
 
         [Space]
+        [SerializeField] private GameHudView GameHudView;
         [SerializeField] private BoardView BoardView;
         [SerializeField] private PieceInventoryView InventoryView;
 
@@ -61,6 +62,7 @@ namespace VForge.Gameplay
 
         private VictoryValidator _victoryValidator;
         private GameplayController _gameplayController;
+        private GameHudPresenter _gameHudPresenter;
 
 
         // --------------------------------------------------------
@@ -86,7 +88,7 @@ namespace VForge.Gameplay
         // Public API
         // --------------------------------------------------------
 
-        public void Restart()
+        public void ResetLevel()
         {
             UnloadLevel();
             LoadLevel();
@@ -220,12 +222,28 @@ namespace VForge.Gameplay
 
             // 3.3.2 Create gameplay
 
-            _gameplayController = new GameplayController(_boardPlacementController, _inventoryUsageController, _boardDropAdapter, _pieceDragAdapter, _inventoryDragAdapter);
+            _gameplayController = new GameplayController(
+                _board,
+                _pieceBoard,
+                _inventory,
+                _boardPlacementController, 
+                _inventoryUsageController, 
+                _victoryValidator,
+                _boardDropAdapter, 
+                _pieceDragAdapter, 
+                _inventoryDragAdapter, 
+                this);
+
+            _gameHudPresenter = new GameHudPresenter(GameHudView, _gameplayController);
+            _gameHudPresenter.Initialize();
         }
 
         private void UnloadLevel()
         {
             // 1. Dispose gameplay orchestrator
+            _gameHudPresenter?.Dispose();
+            _gameHudPresenter = null;
+
             _gameplayController?.Dispose();
             _gameplayController = null;
 

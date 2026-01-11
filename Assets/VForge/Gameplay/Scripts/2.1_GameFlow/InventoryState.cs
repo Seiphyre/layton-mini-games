@@ -29,5 +29,7 @@ namespace VForge.Gameplay
         // --------------------------------------------------
 
         public int ItemCount => InventoryItems.Count;
+
+        public bool InventoryEmpty => InventoryItems.Count == 0;
     }
 }

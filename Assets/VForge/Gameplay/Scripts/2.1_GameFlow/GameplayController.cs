@@ -17,6 +17,31 @@ namespace VForge.Gameplay
 
         private BoardPlacementController _placementController;
         private InventoryUsageController _inventoryUsageController;
+        private VictoryValidator _victoryValidator;
+        private ILevelResetService _levelController;
+
+        private Board _board;
+        private PieceBoard _pieceBoard;
+        private Inventory<PieceDefinition> _inventory;
+
+        public bool _gameStarted = false;
+
+
+        public string LevelTitle { get; }
+        public InventoryState InventoryState => new InventoryState(_inventory);
+        public BoardState BoardState => new BoardState(_pieceBoard);
+        public GameState GameState => new GameState(_pieceBoard, _inventory, _gameStarted);
+
+
+
+        public event Action GameStarted;
+        public event Action GameEnded;
+
+        public event Action<VictoryValidationResult> BoardValidated;
+
+        public event Action<InventoryState> InventoryStateChanged;
+        public event Action<GameState> GameStateChanged;
+
 
 
         // -----------------------------------------------------
@@ -24,11 +49,16 @@ namespace VForge.Gameplay
         // -----------------------------------------------------
 
         public GameplayController(
+            Board board,
+            PieceBoard pieceBoard,
+            Inventory<PieceDefinition> inventory,
             BoardPlacementController boardPlacementController,
             InventoryUsageController inventoryUsageController,
+            VictoryValidator victoryValidator,
             BoardDropAdapter boardDropAdapter,
             PieceDragAdapter pieceDragAdapter,
-            InventoryDragAdapter inventoryDragAdapter)
+            InventoryDragAdapter inventoryDragAdapter,
+            ILevelResetService levelController)
         {
             _boardDropAdapter = boardDropAdapter;
             _pieceDragAdapter = pieceDragAdapter;
@@ -36,7 +66,14 @@ namespace VForge.Gameplay
 
             _placementController = boardPlacementController;
             _inventoryUsageController = inventoryUsageController;
+            _victoryValidator = victoryValidator;
+            _levelController = levelController;
 
+            _board = board;
+            _pieceBoard = pieceBoard;
+            _inventory = inventory;
+
+            LevelTitle = "The Fruit Shop~";
 
 
             // --------------------------------------------------------------
@@ -105,11 +142,54 @@ namespace VForge.Gameplay
                 _placementController.SetPlacementPosition(cellPosition);
                 _placementController.ConfirmPlacement();
             };
+
+            // --
+
+            _inventory.ItemsChanged += (sender, args) =>
+            {
+                InventoryStateChanged.Invoke(new InventoryState(_inventory));
+            };
+
+            // --
+
+            StartGame();
         }
 
         public void Dispose()
         {
             
+        }
+
+
+
+        // -----------------------------------------------------
+        // Public API
+        // -----------------------------------------------------
+
+        public void StartGame()
+        {
+            _gameStarted = true;
+            GameStarted?.Invoke();
+            GameStateChanged?.Invoke(GameState);
+        }
+
+        public void EndGame()
+        {
+            _gameStarted = false;
+            GameEnded?.Invoke();
+            GameStateChanged?.Invoke(GameState);
+        }
+
+        public void ResetGame()
+        {
+            EndGame();
+            _levelController.ResetLevel();
+        }
+
+        public void ValidateBoard()
+        {
+            var result = _victoryValidator.Validate(GameState);
+            BoardValidated?.Invoke(result);
         }
     }
 }

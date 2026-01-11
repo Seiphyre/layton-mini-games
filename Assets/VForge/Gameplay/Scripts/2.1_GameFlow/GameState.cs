@@ -9,17 +9,19 @@ namespace VForge.Gameplay
 {
     public class GameState
     {
+        public bool Started { get; }
         public BoardState BoardState { get; }
         public InventoryState InventoryState { get; }
 
 
 
-        // --------------------------------------------------
-        // Constructor
-        // --------------------------------------------------
+        //// --------------------------------------------------
+        //// Constructor
+        //// --------------------------------------------------
 
-        public GameState(PieceBoard board, Inventory<PieceDefinition> inventory) 
+        public GameState(PieceBoard board, Inventory<PieceDefinition> inventory, bool started)
         {
+            Started = started;
             BoardState = new BoardState(board);
             InventoryState = new InventoryState(inventory);
         }
