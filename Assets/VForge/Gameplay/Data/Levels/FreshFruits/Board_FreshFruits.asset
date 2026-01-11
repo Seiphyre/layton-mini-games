@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f70b9c35b089094ba09cd55531a2d09, type: 3}
-  m_Name: Board_Level_1
+  m_Name: Board_FreshFruits
   m_EditorClassIdentifier: 
   Width: 4
   Height: 7

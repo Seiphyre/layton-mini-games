@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
-  m_Name: Yellow_J_2x2
+  m_Name: Blue_Teapot_2x3
   m_EditorClassIdentifier: 
-  Id: Yellow_J_2x2
-  Tag: {fileID: 11400000, guid: d68cd79fcf5b72b43831c688bec170a7, type: 2}
-  Shape: {fileID: 11400000, guid: 6aeaee1328c89c544a693638c509fe25, type: 2}
-  Visual: {fileID: 11400000, guid: 2929c9b13349d924285650d23105944b, type: 2}
-  Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}
+  Id: Blue_Teapot_2x3
+  Tag: {fileID: 11400000, guid: 5429fc17dd62c4246af755b2e14a0b36, type: 2}
+  Shape: {fileID: 11400000, guid: 54e2551d218df7340b46cc46e2098dba, type: 2}
+  Visual: {fileID: 11400000, guid: 88f3e0b9f6a27f84c806adcdd3e58511, type: 2}
+  Style: {fileID: 11400000, guid: d0ee55e3073188d4386f507d34cbf8b6, type: 2}

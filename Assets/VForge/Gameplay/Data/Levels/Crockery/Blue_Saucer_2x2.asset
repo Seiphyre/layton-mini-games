@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
+  m_Name: Blue_Saucer_2x2
+  m_EditorClassIdentifier: 
+  Id: Red_Saucer_2x2
+  Tag: {fileID: 11400000, guid: cca91a1d608373c4d878bd8f790b8cf9, type: 2}
+  Shape: {fileID: 11400000, guid: fa4c78915db50ae4e9d292e040361de6, type: 2}
+  Visual: {fileID: 11400000, guid: e40d24bb0a7a854408085e434e6c59e5, type: 2}
+  Style: {fileID: 11400000, guid: d0ee55e3073188d4386f507d34cbf8b6, type: 2}

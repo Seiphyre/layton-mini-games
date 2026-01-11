@@ -10,36 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9d717d284bda2f45ba2932ee68814ad, type: 3}
-  m_Name: Inventory
+  m_Name: Inventory_Crockery
   m_EditorClassIdentifier: 
   Pieces:
   - Id: 1
-    Definition: {fileID: 11400000, guid: 0c07e49e342430747ab8f3b650dfb360, type: 2}
+    Definition: {fileID: 11400000, guid: 67de1120f357a2f49be6679da3bda1ea, type: 2}
     Locked: 1
     HasStartingPosition: 1
     StartingPosition: {x: 0, y: 3}
   - Id: 2
-    Definition: {fileID: 11400000, guid: e173366b871d06a4b8f106d568c05a12, type: 2}
+    Definition: {fileID: 11400000, guid: 4a7eae31240ae6d4e88573f3dd6da842, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
   - Id: 3
-    Definition: {fileID: 11400000, guid: e2170de6a0f94104ca8d666160d1eb42, type: 2}
+    Definition: {fileID: 11400000, guid: 3df666aaac426e74aba7a01d9839a07c, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
   - Id: 4
-    Definition: {fileID: 11400000, guid: bc57116c23ae9b140875eb301d0038ec, type: 2}
+    Definition: {fileID: 11400000, guid: 4cde55141a8161e439252d2ecbf7ab57, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
   - Id: 5
-    Definition: {fileID: 11400000, guid: 963eecc2e7dd80b45b6124677cc59a43, type: 2}
+    Definition: {fileID: 11400000, guid: c45452f7d99e83f4baf218b37be81f6e, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}
   - Id: 6
-    Definition: {fileID: 11400000, guid: 084d23c0a6b7c9043951a761567cd54e, type: 2}
+    Definition: {fileID: 11400000, guid: de6474e9e3f4da2478a8b43e0aff4b4a, type: 2}
     Locked: 0
     HasStartingPosition: 0
     StartingPosition: {x: 0, y: 0}

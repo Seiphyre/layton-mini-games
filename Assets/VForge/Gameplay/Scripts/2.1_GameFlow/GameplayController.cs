@@ -78,7 +78,7 @@ namespace VForge.Gameplay
 
         public void Initialize()
         {
-            LevelTitle = "The Fruit Shop";
+            LevelTitle = "Fresh Fruits";
 
             // --
 

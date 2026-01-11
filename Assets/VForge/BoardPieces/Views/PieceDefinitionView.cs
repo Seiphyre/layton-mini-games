@@ -68,14 +68,16 @@ namespace VForge.BoardPieces.Views
                 _blockViews.Add(b);
             }
 
-            if (coloredVisual != null)
+            if (coloredVisual != null && definition?.Visual?.ColoredSprite != null)
             {
                 coloredVisual.sprite = definition.Visual.ColoredSprite;
             }
 
             if (maskVisual != null)
             {
-                maskVisual.sprite = definition.Visual.MaskSprite;
+                if (definition?.Visual?.ColoredSprite != null)
+                    maskVisual.sprite = definition.Visual.MaskSprite;
+
                 maskVisual.color = definition.Style.Color;
             }
         }
@@ -90,6 +92,9 @@ namespace VForge.BoardPieces.Views
 
         private float GetBlockOpacity()
         {
+            if (definition?.Visual?.ColoredSprite == null)
+                return 1;
+
             return (showBlocks, showPiece) switch {
                 (showBlocks: true, showPiece: false) => 1,
                 (showBlocks: true, showPiece: true) => 0.5f,

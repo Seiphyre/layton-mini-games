@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
-  m_Name: Green_O_3x3
+  m_Name: Yellow_Cup_2x2
   m_EditorClassIdentifier: 
-  Id: Green_O_3x3
-  Tag: {fileID: 11400000, guid: 904e8c96ac6265a4fbff9ab4b2115201, type: 2}
-  Shape: {fileID: 11400000, guid: f0df2cfa3590be6409a1bc44d2767542, type: 2}
-  Visual: {fileID: 11400000, guid: 4ddcfff37bf2dcb41af506ad6808183a, type: 2}
-  Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}
+  Id: Yellow_Cup_2x2
+  Tag: {fileID: 11400000, guid: 33460c60e952af447a2089223d4fd514, type: 2}
+  Shape: {fileID: 11400000, guid: fa4c78915db50ae4e9d292e040361de6, type: 2}
+  Visual: {fileID: 11400000, guid: 3f9f8981273029041a06b6907c56df06, type: 2}
+  Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}

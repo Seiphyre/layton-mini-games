@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
-  m_Name: Red_O_2x2
+  m_Name: Yellow_Saucer_2x2
   m_EditorClassIdentifier: 
-  Id: Red_O_2x2
-  Tag: {fileID: 11400000, guid: 904e8c96ac6265a4fbff9ab4b2115201, type: 2}
+  Id: Yellow_Saucer_2x2
+  Tag: {fileID: 11400000, guid: cca91a1d608373c4d878bd8f790b8cf9, type: 2}
   Shape: {fileID: 11400000, guid: fa4c78915db50ae4e9d292e040361de6, type: 2}
-  Visual: {fileID: 11400000, guid: cf16d6abb165eed46be1a99d00be5822, type: 2}
-  Style: {fileID: 11400000, guid: 154dff661ae9d2a4fbce46aa78c3555c, type: 2}
+  Visual: {fileID: 11400000, guid: e40d24bb0a7a854408085e434e6c59e5, type: 2}
+  Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}

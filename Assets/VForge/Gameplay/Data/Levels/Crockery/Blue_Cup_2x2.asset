@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
-  m_Name: Green_J_2x2
+  m_Name: Blue_Cup_2x2
   m_EditorClassIdentifier: 
-  Id: Green_J_2x2
-  Tag: {fileID: 11400000, guid: d68cd79fcf5b72b43831c688bec170a7, type: 2}
-  Shape: {fileID: 11400000, guid: 6aeaee1328c89c544a693638c509fe25, type: 2}
-  Visual: {fileID: 11400000, guid: 2929c9b13349d924285650d23105944b, type: 2}
-  Style: {fileID: 11400000, guid: 50ba430c1695a48428870156b397ddfc, type: 2}
+  Id: Red_Cup_2x2
+  Tag: {fileID: 11400000, guid: 33460c60e952af447a2089223d4fd514, type: 2}
+  Shape: {fileID: 11400000, guid: fa4c78915db50ae4e9d292e040361de6, type: 2}
+  Visual: {fileID: 11400000, guid: 3f9f8981273029041a06b6907c56df06, type: 2}
+  Style: {fileID: 11400000, guid: d0ee55e3073188d4386f507d34cbf8b6, type: 2}
