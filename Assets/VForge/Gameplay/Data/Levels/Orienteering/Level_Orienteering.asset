@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
+  m_Name: Level_Orienteering
+  m_EditorClassIdentifier: 
+  Name: 3. Orienteering
+  BoardDefinition: {fileID: 11400000, guid: ba6c531b18d27b4498430f4d3d06e818, type: 2}
+  StartPiece:
+    Definition: {fileID: 11400000, guid: 688bb0e7a39878749b7d5759e7c964d0, type: 2}
+    Position: {x: 0, y: 1}
+  StartInventory:
+  - Id: 1
+    Definition: {fileID: 11400000, guid: 572f8fbe90683af46ab3a08d43c15994, type: 2}
+  - Id: 2
+    Definition: {fileID: 11400000, guid: 96d8e79f7c8187b4c881587c40dff003, type: 2}
+  - Id: 3
+    Definition: {fileID: 11400000, guid: 7d2e320c78c15524ab392fef20f14694, type: 2}
+  - Id: 4
+    Definition: {fileID: 11400000, guid: 9eef26ec686bce949931d6958affb3fc, type: 2}
+  - Id: 5
+    Definition: {fileID: 11400000, guid: 333f02f0b513de7439dc0e66c74a83df, type: 2}
