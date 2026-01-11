@@ -6,6 +6,6 @@ namespace VForge.Gameplay
     [CreateAssetMenu(menuName = "Piece/Data Set")]
     public class InventoryDefinition : ScriptableObject
     {
-        public List<InventoryItemData> Pieces = new();
+        public List<StartInventoryItem> Pieces = new();
     }
 }

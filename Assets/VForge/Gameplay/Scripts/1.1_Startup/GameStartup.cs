@@ -13,13 +13,10 @@ using VForge.Inventories.UI;
 
 namespace VForge.Gameplay
 {
-    public class GameStartup : MonoBehaviour, ILevelResetService
+    public class GameStartup : MonoBehaviour, ILevelController
     {
-
-
         [Header("Settings"), Space]
-        [SerializeField] private BoardDefinition BoardDefinition;
-        [SerializeField] private InventoryDefinition InventoryDefinition;
+        [SerializeField] private GameConfig Config;
 
         [Space]
         [SerializeField] private PieceBoardView PieceBoardViewPrefab;
@@ -64,6 +61,9 @@ namespace VForge.Gameplay
         private GameplayController _gameplayController;
         private GameHudPresenter _gameHudPresenter;
 
+        private int _currentLevelIndex = 0;
+        public LevelData CurrentLevel => Config.Levels.ElementAt(_currentLevelIndex);
+
 
         // --------------------------------------------------------
         // Initialization
@@ -71,6 +71,8 @@ namespace VForge.Gameplay
 
         private void Start()
         {
+            _currentLevelIndex = Config.StartLevel;
+
             LoadLevel();
 
             // Todo: Refactoring of BoardDropAdapter to export placement logic in the gameplayController
@@ -109,7 +111,7 @@ namespace VForge.Gameplay
 
             // 1.1 Build Board
 
-            _board = new Board(BoardDefinition);
+            _board = new Board(CurrentLevel.BoardDefinition);
 
             // 1.2 Build Piece Board
 
@@ -121,28 +123,22 @@ namespace VForge.Gameplay
 
             // 1.5 Place pieces on board
 
-            var boardPieces = InventoryDefinition.Pieces.Where(p => p.HasStartingPosition);
-            foreach (var boardPiece in boardPieces)
-            {
-                var result = _pieceBoard.TryPlace(
-                    boardPiece.Definition,
-                    boardPiece.StartingPosition,
-                    boardPiece.Locked,
+            var startPiece = CurrentLevel.StartPiece;
+            var result = _pieceBoard.TryPlace(
+                    startPiece.Definition,
+                    startPiece.Position,
+                    locked: true,
                     out var piece);
 
-                if (!result.Success)
-                {
-                    Debug.LogError($"Failed to place starting piece {piece.Id}: {result.Reason}");
-                    continue;
-                }
+            if (!result.Success)
+                Debug.LogError($"Failed to place starting piece {piece.Id}: {result.Reason}");
 
-                if (_startPieceId == -1)
-                    _startPieceId = piece.Id;
-            }
+            if (_startPieceId == -1)
+                _startPieceId = piece.Id;
 
             // 1.6 Place pieces in nventory
 
-            var inventoryitems = InventoryDefinition.Pieces.Where(p => !p.HasStartingPosition);
+            var inventoryitems = CurrentLevel.StartInventory;
             foreach (var inventoryItem in inventoryitems)
             {
                 _inventory.Add(new InventoryItem<PieceDefinition>(null, inventoryItem.Definition));
@@ -156,7 +152,7 @@ namespace VForge.Gameplay
 
             // 2.1 Initialize board view
 
-            BoardView.Bind(BoardDefinition);
+            BoardView.Bind(CurrentLevel.BoardDefinition);
 
             // 2.2 Create piece board view
 
@@ -292,13 +288,20 @@ namespace VForge.Gameplay
             _startPieceId = -1;
         }
 
-        private void Update()
+        public void LoadNextLevel()
         {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                Debug.Log("ResetLevel");
-                ResetLevel();
-            }
+            _currentLevelIndex++;
+
+            if (_currentLevelIndex >= Config.Levels.Count)
+                _currentLevelIndex = Config.Levels.Count - 1;
+
+            UnloadLevel();
+            LoadLevel();
+        }
+
+        public bool HasNextLevel()
+        {
+            return _currentLevelIndex + 1 < Config.Levels.Count;
         }
     }
 }

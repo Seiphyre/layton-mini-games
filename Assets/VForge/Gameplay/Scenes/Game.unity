@@ -1767,8 +1767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0a9ecc1885fa004c8451ced2f208761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoardDefinition: {fileID: 11400000, guid: 2b61f3acb4c928d469fa1f1b83a1ddde, type: 2}
-  InventoryDefinition: {fileID: 11400000, guid: 03c0bb904a95a0d46817014488878e43, type: 2}
+  Config: {fileID: 11400000, guid: 5d9c319638738bb4ba7aab289f21afaa, type: 2}
   PieceBoardViewPrefab: {fileID: 4644951857108012364, guid: c6476983ab2f4604dbeacfd662536359, type: 3}
   DragProxyFactory: {fileID: 11400000, guid: 785f41ac4e1f4194eb6a2f7b362ecbc1, type: 2}
   DragController: {fileID: 100650610}

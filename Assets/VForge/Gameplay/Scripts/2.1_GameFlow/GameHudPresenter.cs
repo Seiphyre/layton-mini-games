@@ -68,13 +68,17 @@ namespace VForge.Gameplay
         private void OnRetryClicked()
         {
             view.OverlayRoot.HideAll();
-            gameplay.ResetGame();
+            gameplay.ResetLevel();
         }
 
         private void OnContinueClicked()
         {
             view.OverlayRoot.HideAll();
-            gameplay.ResetGame();
+
+            if (gameplay.HasNextLevel())
+                gameplay.NextLevel();
+            else
+                UnityEditor.EditorApplication.ExitPlaymode();
         }
 
         private void OnDismissClicked()

@@ -75,7 +75,7 @@ namespace VForge.Gameplay
 
         private void OnResetClicked()
         {
-            gameplay.ResetGame();
+            gameplay.ResetLevel();
         }
 
 

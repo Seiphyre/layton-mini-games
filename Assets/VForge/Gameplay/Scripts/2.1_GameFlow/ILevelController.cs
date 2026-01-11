@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace VForge.Gameplay
 {
-    public interface ILevelResetService
+    public interface ILevelController
     {
         void ResetLevel();
+        bool HasNextLevel();
+        void LoadNextLevel();
+
+        LevelData CurrentLevel { get; }
     }
 }

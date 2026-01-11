@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: Yellow_Teapot_3x2
   Tag: {fileID: 11400000, guid: 5429fc17dd62c4246af755b2e14a0b36, type: 2}
-  Shape: {fileID: 11400000, guid: 54e2551d218df7340b46cc46e2098dba, type: 2}
+  Shape: {fileID: 11400000, guid: 3e836131eb660124495eb9fba6e0f73d, type: 2}
   Visual: {fileID: 11400000, guid: a0ca2d2ad39918f488663451c08b9317, type: 2}
   Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}

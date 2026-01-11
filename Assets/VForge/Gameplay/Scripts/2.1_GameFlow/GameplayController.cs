@@ -7,7 +7,6 @@ using VForge.BoardPieces.Definitions;
 using VForge.BoardPieces.Runtime;
 using VForge.Boards.Runtime;
 using VForge.Inventories;
-using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 namespace VForge.Gameplay
 {
@@ -20,7 +19,7 @@ namespace VForge.Gameplay
         private BoardPlacementController _placementController;
         private InventoryUsageController _inventoryUsageController;
         private VictoryValidator _victoryValidator;
-        private ILevelResetService _levelController;
+        private ILevelController _levelController;
 
         private Board _board;
         private PieceBoard _pieceBoard;
@@ -60,7 +59,7 @@ namespace VForge.Gameplay
             BoardDropAdapter boardDropAdapter,
             PieceDragAdapter pieceDragAdapter,
             InventoryDragAdapter inventoryDragAdapter,
-            ILevelResetService levelController)
+            ILevelController levelController)
         {
             _boardDropAdapter = boardDropAdapter;
             _pieceDragAdapter = pieceDragAdapter;
@@ -78,7 +77,7 @@ namespace VForge.Gameplay
 
         public void Initialize()
         {
-            LevelTitle = "Fresh Fruits";
+            LevelTitle = _levelController.CurrentLevel.Name;
 
             // --
 
@@ -136,10 +135,21 @@ namespace VForge.Gameplay
             GameStateChanged?.Invoke(GameState);
         }
 
-        public void ResetGame()
+        public void ResetLevel()
         {
             EndGame();
             _levelController.ResetLevel();
+        }
+
+        public bool HasNextLevel()
+        {
+            return _levelController.HasNextLevel();
+        }
+
+        public void NextLevel()
+        {
+            EndGame();
+            _levelController.LoadNextLevel();
         }
 
         public void ValidateBoard()
