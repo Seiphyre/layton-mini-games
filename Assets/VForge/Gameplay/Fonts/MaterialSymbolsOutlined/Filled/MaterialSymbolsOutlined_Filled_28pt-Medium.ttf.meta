@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: c71e1a71415f25b49841b8842880414b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Material Symbols Outlined Filled 28pt
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 43e97efcf2b1bec48b5986c87f547026, type: 3}
+  - {fileID: 12800000, guid: 8122986901df44f45be73fd7d4352f54, type: 3}
+  - {fileID: 12800000, guid: 318958a2060b8624ab3aec6b23bc2c5f, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
