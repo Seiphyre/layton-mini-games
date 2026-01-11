@@ -20,6 +20,7 @@ namespace VForge.Gameplay
         private InventoryUsageController _inventoryUsageController;
         private VictoryValidator _victoryValidator;
         private ILevelController _levelController;
+        private ISceneController _sceneController;
 
         private Board _board;
         private PieceBoard _pieceBoard;
@@ -59,7 +60,8 @@ namespace VForge.Gameplay
             BoardDropAdapter boardDropAdapter,
             PieceDragAdapter pieceDragAdapter,
             InventoryDragAdapter inventoryDragAdapter,
-            ILevelController levelController)
+            ILevelController levelController,
+            ISceneController sceneController)
         {
             _boardDropAdapter = boardDropAdapter;
             _pieceDragAdapter = pieceDragAdapter;
@@ -69,6 +71,7 @@ namespace VForge.Gameplay
             _inventoryUsageController = inventoryUsageController;
             _victoryValidator = victoryValidator;
             _levelController = levelController;
+            _sceneController = sceneController;
 
             _board = board;
             _pieceBoard = pieceBoard;
@@ -156,6 +159,11 @@ namespace VForge.Gameplay
         {
             var result = _victoryValidator.Validate(GameState);
             BoardValidated?.Invoke(result);
+        }
+
+        public void ExitGame()
+        {
+            _sceneController.GoToHomePage();
         }
 
 

@@ -10,9 +10,11 @@ namespace VForge.Gameplay
     {
         [SerializeField] Button finishCheckButton;
         [SerializeField] Button resetButton;
+        [SerializeField] Button exitButton;
 
         public event Action OnFinishCheckClicked;
         public event Action OnResetClicked;
+        public event Action OnExitClicked;
 
 
 
@@ -24,12 +26,14 @@ namespace VForge.Gameplay
         {
             finishCheckButton.onClick.AddListener(InvokeOnFinishCheckClickedEvent);
             resetButton.onClick.AddListener(InvokeOnResetClickedEvent);
+            exitButton.onClick.AddListener(InvokeOnExitClickedEvent);
         }
 
         private void OnDisable()
         {
             finishCheckButton.onClick.RemoveListener(InvokeOnFinishCheckClickedEvent);
             resetButton.onClick.RemoveListener(InvokeOnResetClickedEvent);
+            exitButton.onClick.RemoveListener(InvokeOnExitClickedEvent);
         }
 
 
@@ -48,6 +52,11 @@ namespace VForge.Gameplay
             resetButton.interactable = enabled;
         }
 
+        public void SetExitEnabled(bool enabled)
+        {
+            exitButton.interactable = enabled;
+        }
+
 
 
         // --------------------------------------------------
@@ -62,6 +71,11 @@ namespace VForge.Gameplay
         private void InvokeOnResetClickedEvent()
         {
             OnResetClicked?.Invoke();
+        }
+
+        private void InvokeOnExitClickedEvent()
+        {
+            OnExitClicked?.Invoke();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace VForge.Gameplay
         {
             view.OnFinishCheckClicked += OnFinishCheckClicked;
             view.OnResetClicked += OnResetClicked;
+            view.OnExitClicked += OnExitClicked;
 
             gameplay.InventoryStateChanged += OnInventoryStateChanged;
             gameplay.GameStateChanged += OnGameStateChanged;
@@ -44,6 +45,7 @@ namespace VForge.Gameplay
         {
             view.OnFinishCheckClicked -= OnFinishCheckClicked;
             view.OnResetClicked -= OnResetClicked;
+            view.OnExitClicked -= OnExitClicked;
 
             gameplay.InventoryStateChanged -= OnInventoryStateChanged;
             gameplay.GameStateChanged -= OnGameStateChanged;
@@ -59,6 +61,7 @@ namespace VForge.Gameplay
         {
             view.SetFinishCheckEnabled(gameStarted && inventoryEmpty);
             view.SetResetEnabled(gameStarted);
+            view.SetExitEnabled(gameStarted);
         }
 
 
@@ -76,6 +79,11 @@ namespace VForge.Gameplay
         private void OnResetClicked()
         {
             gameplay.ResetLevel();
+        }
+
+        private void OnExitClicked()
+        {
+            gameplay.ExitGame();
         }
 
 

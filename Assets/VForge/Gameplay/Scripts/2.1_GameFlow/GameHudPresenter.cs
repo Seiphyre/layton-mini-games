@@ -78,13 +78,13 @@ namespace VForge.Gameplay
             if (gameplay.HasNextLevel())
                 gameplay.NextLevel();
             else
-                UnityEditor.EditorApplication.ExitPlaymode();
+                gameplay.ExitGame();
         }
 
         private void OnDismissClicked()
         {
             view.OverlayRoot.HideAll();
-            UnityEditor.EditorApplication.ExitPlaymode();
+            gameplay.ExitGame();
         }
     }
 }

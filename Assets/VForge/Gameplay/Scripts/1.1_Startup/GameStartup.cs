@@ -9,11 +9,12 @@ using VForge.BoardPieces.Definitions;
 using VForge.Inventories;
 using VForge.Boards.Definitions;
 using VForge.Inventories.UI;
+using UnityEngine.SceneManagement;
 
 
 namespace VForge.Gameplay
 {
-    public class GameStartup : MonoBehaviour, ILevelController
+    public class GameStartup : MonoBehaviour, ILevelController, ISceneController
     {
         [Header("Settings"), Space]
         [SerializeField] private GameConfig Config;
@@ -232,7 +233,8 @@ namespace VForge.Gameplay
                 _boardDropAdapter,
                 _pieceDragAdapter,
                 _inventoryDragAdapter,
-                this);
+                levelController: this,
+                sceneController: this);
             _gameplayController.Initialize();
 
             _gameHudPresenter = new GameHudPresenter(GameHudView, _gameplayController);
@@ -302,6 +304,11 @@ namespace VForge.Gameplay
         public bool HasNextLevel()
         {
             return _currentLevelIndex + 1 < Config.Levels.Count;
+        }
+
+        public void GoToHomePage()
+        {
+            SceneManager.LoadScene("MenuScene");
         }
     }
 }

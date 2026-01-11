@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   definitionView: {fileID: 2580137889732424477}
-  blockSize: 24
+  blockSize: 56
 --- !u!114 &5091877165874758087
 MonoBehaviour:
   m_ObjectHideFlags: 0
