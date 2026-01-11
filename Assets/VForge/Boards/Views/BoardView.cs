@@ -5,8 +5,6 @@ using VForge.Boards.Definitions;
 using VForge.Boards.Runtime;
 using System;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
-using Codice.CM.Client.Differences;
 
 namespace VForge.Boards.Views
 {
