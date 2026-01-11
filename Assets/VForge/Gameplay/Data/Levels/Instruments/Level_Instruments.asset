@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
+  m_Name: Level_Instruments
+  m_EditorClassIdentifier: 
+  Name: 4. Instruments
+  BoardDefinition: {fileID: 11400000, guid: 9c21f264c8ac06d4ca747a55f007ea2b, type: 2}
+  StartPiece:
+    Definition: {fileID: 11400000, guid: 750fd6f56370be5449ff5e31117484dc, type: 2}
+    Position: {x: 0, y: 3}
+  StartInventory:
+  - Id: 1
+    Definition: {fileID: 11400000, guid: 925c5d587ae724f4b941ea2bba6c9662, type: 2}
+  - Id: 2
+    Definition: {fileID: 11400000, guid: 9daf743eada5f0545926e6b6fab38a5e, type: 2}
+  - Id: 3
+    Definition: {fileID: 11400000, guid: 99e7d966fe9834f4aa2b7dc3b31949f8, type: 2}
+  - Id: 4
+    Definition: {fileID: 11400000, guid: 7c1ae975dfa517740b17043397aa6100, type: 2}
+  - Id: 5
+    Definition: {fileID: 11400000, guid: f01370e9ce6ba8f4ea5ff0590a00a323, type: 2}
+  - Id: 6
+    Definition: {fileID: 11400000, guid: 2d4c588597341f4478d41a35aedc08ec, type: 2}

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
+  m_Name: Yellow_Violin_2x3
+  m_EditorClassIdentifier: 
+  Id: Yellow_Violin_2x3
+  Tag: {fileID: 11400000, guid: 6970f07be8073234dbda6345d88c0373, type: 2}
+  Shape: {fileID: 11400000, guid: 54e2551d218df7340b46cc46e2098dba, type: 2}
+  Visual: {fileID: 11400000, guid: a55d2c9b05199a7478e7b7da7fa1bc20, type: 2}
+  Style: {fileID: 11400000, guid: 5a5740ca27eafd646a223dcac61b1958, type: 2}
