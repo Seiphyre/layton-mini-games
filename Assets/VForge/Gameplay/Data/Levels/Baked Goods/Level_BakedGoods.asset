@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
+  m_Name: Level_BakedGoods
+  m_EditorClassIdentifier: 
+  Name: 5. Baked Goods
+  BoardDefinition: {fileID: 11400000, guid: 0af0398d76f443349b62fedc03582482, type: 2}
+  StartPiece:
+    Definition: {fileID: 11400000, guid: 9d526db3b48ef084daa95816ea7f60c8, type: 2}
+    Position: {x: 2, y: 0}
+  StartInventory:
+  - Id: 1
+    Definition: {fileID: 11400000, guid: e7e417c387bbcf54199cd5299898bb46, type: 2}
+  - Id: 2
+    Definition: {fileID: 11400000, guid: 0f26f2dfab265ab48a2ada8246681fd1, type: 2}
+  - Id: 3
+    Definition: {fileID: 11400000, guid: bb65fe1794f446e43bd9338244d92daf, type: 2}
+  - Id: 4
+    Definition: {fileID: 11400000, guid: 41bcc46254527c6438159bb2a5719b8a, type: 2}
+  - Id: 5
+    Definition: {fileID: 11400000, guid: 58aeab1d3c15a6c46b8b9bbb630829c9, type: 2}
+  - Id: 6
+    Definition: {fileID: 11400000, guid: 25d18cfbb6f160149aa838bc7ec456ee, type: 2}
+  - Id: 7
+    Definition: {fileID: 11400000, guid: f40bc04d701170d40a9f7ca879d751ec, type: 2}

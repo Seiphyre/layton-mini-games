@@ -6,7 +6,8 @@ using VForge.Gameplay;
 
 public class MenuController : MonoBehaviour
 {
-    [SerializeField] private Transform buttonsRoot;
+    [SerializeField] private Transform buttonsRoot1;
+    [SerializeField] private Transform buttonsRoot2;
     [SerializeField] private LevelButton buttonprefab;
 
     [SerializeField] private GameConfig gameConfig;
@@ -17,14 +18,16 @@ public class MenuController : MonoBehaviour
 
     private void OnEnable()
     {
+        int i = 1;
         foreach (var levelData in gameConfig.Levels)
         {
-            var levelButton = Instantiate(buttonprefab, buttonsRoot);
+            var levelButton = Instantiate(buttonprefab, (i <= 3) ? buttonsRoot1 : buttonsRoot2);
 
             levelButton.Initialize(levelData);
             levelButton.OnCick += OnClick;
 
             levelButtons.Add(levelButton);
+            i++;
         }
     }
 

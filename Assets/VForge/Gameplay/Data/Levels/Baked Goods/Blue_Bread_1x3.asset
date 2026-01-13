@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc881cc53c7ebb0449bbb61107169658, type: 3}
+  m_Name: Blue_Bread_1x3
+  m_EditorClassIdentifier: 
+  Id: Blue_Bread_1x3
+  Tag: {fileID: 11400000, guid: 6fb508acf869e0247b272ee33d0baaa7, type: 2}
+  Shape: {fileID: 11400000, guid: 156ce812483139045babbff2c5597756, type: 2}
+  Visual: {fileID: 11400000, guid: abab9bd018f1b7d40b02ae9053702eed, type: 2}
+  Style: {fileID: 11400000, guid: d0ee55e3073188d4386f507d34cbf8b6, type: 2}
