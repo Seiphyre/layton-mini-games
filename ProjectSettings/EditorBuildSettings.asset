@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/VForge/Gameplay/Scenes/MenuScene.unity
+    path: Assets/_OneStopShop/Menu/Scene/MenuScene.unity
     guid: 01bc0297c187f1b44bc2b5897d361f98
   - enabled: 1
-    path: Assets/VForge/Gameplay/Scenes/GameScene.unity
+    path: Assets/_OneStopShop/Game/Scene/GameScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}
