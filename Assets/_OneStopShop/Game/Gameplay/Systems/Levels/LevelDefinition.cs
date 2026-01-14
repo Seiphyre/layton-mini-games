@@ -9,6 +9,7 @@ namespace OneStopShop
     public class LevelDefinition : ScriptableObject
     {
         public string Name;
+        public Sprite Thumbail;
         public BoardDefinition BoardDefinition;
         public StartPiece StartPiece;
         public List<StartInventoryItem> StartInventory = new();

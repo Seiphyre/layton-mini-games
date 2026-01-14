@@ -10,19 +10,27 @@ namespace OneStopShop
     public sealed class SelectLevelButtonView : MonoBehaviour
     {
         [SerializeField] private Button button;
-        [SerializeField] private TMP_Text label;
+        [SerializeField] private TMP_Text LevelName;
+        [SerializeField] private TMP_Text LevelNumber;
+        [SerializeField] private Image Thumbnail;
 
-        public void Bind(string text, Action onClick = null)
+        public void Bind(int levelNumber, string levelName, Sprite thumbnail, Action onClick = null)
         {
             Unbind();
 
-            label.text = text;
+            if (LevelNumber) LevelNumber.text = levelNumber.ToString();
+            if (LevelName) LevelName.text = levelName;
+            if (Thumbnail) Thumbnail.sprite = thumbnail;
+
             button.onClick.AddListener(() => onClick?.Invoke());
         }
 
         public void Unbind()
         {
-            label.text = string.Empty;
+            if (LevelNumber) LevelNumber.text = "1";
+            if (LevelName) LevelName.text = "level";
+            if (Thumbnail) Thumbnail.sprite = null;
+
             button.onClick.RemoveAllListeners();
         }
     }

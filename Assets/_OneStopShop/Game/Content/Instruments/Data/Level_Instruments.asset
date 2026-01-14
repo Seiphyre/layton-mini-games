@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
   m_Name: Level_Instruments
   m_EditorClassIdentifier: 
-  Name: 4. Instruments
+  Name: Instruments
+  Thumbail: {fileID: 21300000, guid: f2dd30efbf598ef48b1285f6fb044571, type: 3}
   BoardDefinition: {fileID: 11400000, guid: 9c21f264c8ac06d4ca747a55f007ea2b, type: 2}
   StartPiece:
     Definition: {fileID: 11400000, guid: 750fd6f56370be5449ff5e31117484dc, type: 2}

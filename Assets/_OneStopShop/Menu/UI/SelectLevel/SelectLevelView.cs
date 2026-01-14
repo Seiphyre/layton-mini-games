@@ -31,6 +31,7 @@ namespace OneStopShop
             if (levels == null)
                 return;
 
+            int levelNumber = 1;
             foreach (var level in levels)
             {
                 if (level == null)
@@ -40,9 +41,11 @@ namespace OneStopShop
                 button.name = level.Name;
                 onButtonCreated?.Invoke(button.gameObject);
 
-                button.Bind(level.Name, () => OnButtonClicked(level));
+                button.Bind(levelNumber, level.Name, level.Thumbail, () => OnButtonClicked(level));
 
                 _buttonViews.Add(button);
+
+                levelNumber++;
             }
         }
 

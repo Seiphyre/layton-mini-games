@@ -11,6 +11,8 @@ namespace OneStopShop
     [RequireComponent(typeof(SelectLevelButtonView))]
     public sealed class SelectLevelButtonViewPreview : MonoBehaviour
     {
+        [SerializeField] private Sprite thumbnail;
+        [SerializeField] private int levelNumber = 1;
         [SerializeField] private string levelName = "{level_name}";
 
         private SelectLevelButtonView _view;
@@ -69,7 +71,7 @@ namespace OneStopShop
             if (IsDrivenByScreenPreview())
                 return;
 
-            _view.Bind(levelName);
+            _view.Bind(levelNumber, levelName, thumbnail);
         }
 
         private void Unbind()

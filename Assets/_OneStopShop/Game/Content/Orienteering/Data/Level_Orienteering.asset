@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
   m_Name: Level_Orienteering
   m_EditorClassIdentifier: 
-  Name: 3. Orienteering
+  Name: Orienteering
+  Thumbail: {fileID: 21300000, guid: ed82d651c86d4314589452603b1748c6, type: 3}
   BoardDefinition: {fileID: 11400000, guid: ba6c531b18d27b4498430f4d3d06e818, type: 2}
   StartPiece:
     Definition: {fileID: 11400000, guid: 688bb0e7a39878749b7d5759e7c964d0, type: 2}

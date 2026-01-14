@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39dcbbfbd909e642bb6459e27756bd8, type: 3}
   m_Name: Level_FreshFruits
   m_EditorClassIdentifier: 
-  Name: 1. Fresh Fruits
+  Name: Fresh Fruits
+  Thumbail: {fileID: 21300000, guid: 64d11fa1abb0d0a48a2814d6b8ae540d, type: 3}
   BoardDefinition: {fileID: 11400000, guid: f80c817decd4ed049ad508689df44a6c, type: 2}
   StartPiece:
     Definition: {fileID: 11400000, guid: 0c07e49e342430747ab8f3b650dfb360, type: 2}
