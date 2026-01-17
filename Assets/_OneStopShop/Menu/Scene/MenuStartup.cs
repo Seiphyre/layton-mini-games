@@ -1,52 +1,29 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-//namespace OneStopShop
-//{
-//    public class MenuStartup : MonoBehaviour
-//    {
-//        [SerializeField] private Transform buttonsRoot1;
-//        [SerializeField] private Transform buttonsRoot2;
-//        //[SerializeField] private LevelButton buttonprefab;
+namespace OneStopShop
+{
+    public class MenuStartup : MonoBehaviour
+    {
+        [SerializeField] private SelectLevelView selectLevelView;
 
-//        [SerializeField] private AppConfig gameConfig;
-
-//        //private List<LevelButton> levelButtons = new();
+        [SerializeField] private AppConfig gameConfig;
 
 
 
-//        private void OnEnable()
-//        {
-//            int i = 1;
-//            foreach (var levelData in gameConfig.Levels)
-//            {
-//                var levelButton = Instantiate(buttonprefab, (i <= 3) ? buttonsRoot1 : buttonsRoot2);
+        private void Start()
+        {
+            selectLevelView.Bind(gameConfig.Levels);
 
-//                levelButton.Initialize(levelData);
-//                levelButton.OnCick += OnClick;
+            selectLevelView.LevelSelected += SelectLevelView_LevelSelected;
+        }
 
-//                levelButtons.Add(levelButton);
-//                i++;
-//            }
-//        }
-
-//        private void OnDisable()
-//        {
-//            foreach (var levelButton in levelButtons)
-//            {
-//                levelButton.OnCick -= OnClick;
-//                Destroy(levelButton.gameObject);
-//            }
-
-//            levelButtons.Clear();
-//        }
-
-//        private void OnClick(LevelButton levelButton)
-//        {
-//            //gameConfig.StartLevel = gameConfig.Levels.IndexOf(levelButton.LevelData);
-//            //SceneManager.LoadScene("GameScene");
-//        }
-//    }
-//}
+        private void SelectLevelView_LevelSelected(LevelDefinition levelDefinition)
+        {
+            gameConfig.StartLevel = gameConfig.Levels.IndexOf(levelDefinition);
+            SceneManager.LoadScene("GameScene");
+        }
+    }
+}
